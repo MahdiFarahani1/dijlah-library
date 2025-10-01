@@ -29,7 +29,6 @@ class ContentCubit extends Cubit<ContentState> {
     required this.context,
   }) : super(const ContentState()) {
     _init(context);
-
     settingsSubscription = settingsCubit.stream.listen((settingsState) {
       _rebuildHtml(settingsState, context);
     });

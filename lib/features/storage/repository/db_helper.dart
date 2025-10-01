@@ -53,7 +53,10 @@ class DatabaseStorageHelper {
 
   static Future<List<Map<String, dynamic>>> getAllReading() async {
     final db = await database;
-    return await db.query('reading');
+    return await db.query(
+      'reading',
+      orderBy: "id DESC",
+    );
   }
 
   static Future<List<Map<String, dynamic>>> getAllReadingAbout(

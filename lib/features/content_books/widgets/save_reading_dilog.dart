@@ -1,3 +1,4 @@
+import 'package:bookapp/features/mainWrapper/view/navigaion.dart';
 import 'package:bookapp/features/reading_progress/bloc/cubit/readingbook_cubit.dart';
 import 'package:bookapp/features/storage/repository/db_helper.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,13 @@ class SaveReadingDilog {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
-                      Navigator.pop(context);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MainWrapper(),
+                        ),
+                        (route) => false,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade100,
@@ -58,7 +65,13 @@ class SaveReadingDilog {
                       context.read<ReadingbookCubit>().getReadingDataFromDb();
 
                       Navigator.of(context).pop(true);
-                      Navigator.pop(context);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MainWrapper(),
+                        ),
+                        (route) => false,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey.shade200,

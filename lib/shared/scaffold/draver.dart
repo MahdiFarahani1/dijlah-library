@@ -1,3 +1,4 @@
+import 'package:bookapp/config/version/version.dart';
 import 'package:bookapp/features/about/view/about_app_screen.dart';
 import 'package:bookapp/features/mainWrapper/view/navigaion.dart';
 import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
@@ -119,11 +120,25 @@ class CustomDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(bottom: 12),
               child: Column(
                 children: [
-                  Text('الاصدار: 2.0.0', style: TextStyle(fontSize: 12)),
+                  FutureBuilder<String>(
+                    future: getAppVersion(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('جارٍ التحميل...',
+                            style: TextStyle(fontSize: 12));
+                      } else if (snapshot.hasError) {
+                        return Text('خطأ في جلب الإصدار',
+                            style: TextStyle(fontSize: 12));
+                      } else {
+                        return Text(snapshot.data!,
+                            style: TextStyle(fontSize: 12));
+                      }
+                    },
+                  ),
                   SizedBox(height: 4),
                   Text(
                     'Powered by Dlijah IT',

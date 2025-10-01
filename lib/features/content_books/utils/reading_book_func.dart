@@ -1,5 +1,6 @@
 import 'package:bookapp/features/content_books/bloc/content/content_cubit.dart';
 import 'package:bookapp/features/content_books/widgets/save_reading_dilog.dart';
+import 'package:bookapp/features/mainWrapper/view/navigaion.dart';
 import 'package:bookapp/features/storage/repository/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +29,13 @@ readBookDialog(BuildContext context, String bookname, String bookId) async {
         length: context.read<ContentCubit>().state.pages.length,
       );
     } else {
-      Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => MainWrapper(), // این همون صفحه مقصد
+        ),
+        (route) => false,
+      );
     }
   }
 }

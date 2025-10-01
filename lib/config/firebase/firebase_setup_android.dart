@@ -25,7 +25,7 @@ class NotificationService {
     await _fcm.requestPermission();
 
     // Subscribe to topic
-    await _fcm.subscribeToTopic("general");
+    await _fcm.subscribeToTopic("maarifadeen_android");
 
     // Get token
     String? token = await _fcm.getToken();

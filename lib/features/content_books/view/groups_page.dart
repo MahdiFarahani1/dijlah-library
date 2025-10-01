@@ -261,16 +261,16 @@ class _BookGroupsPageState extends State<BookGroupsPage> {
                 color: Theme.of(context).primaryColor, width: 21, height: 21)),
         onTap: () {
           double pos = double.parse(group['page']);
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ContentPage(
-                  bookId: widget.bookId,
-                  bookName: widget.bookName,
-                  scrollPosetion: pos - 1.0,
-                  sw: '',
-                ),
-              ));
+          print('click on on on ');
+          Navigator.of(context, rootNavigator: true).push(
+            MaterialPageRoute(
+              builder: (_) => ContentPage(
+                bookId: widget.bookId,
+                bookName: widget.bookName,
+                scrollPosetion: pos,
+              ),
+            ),
+          );
         },
       ),
     );

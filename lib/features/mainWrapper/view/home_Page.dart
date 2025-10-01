@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bookapp/features/books/view/books_downloaded.dart';
 import 'package:bookapp/features/books/view/books_screen.dart';
+import 'package:bookapp/features/content_books/view/content_page.dart';
 import 'package:bookapp/features/mainWrapper/bloc/slider/slider_cubit.dart';
 import 'package:bookapp/features/mainWrapper/view/all_lastBook.dart';
 import 'package:bookapp/features/mainWrapper/view/all_readingbook.dart';
@@ -259,19 +260,23 @@ class _HomePageState extends State<HomePage> {
                       // تعیین تعداد ستون بر اساس عرض
                       int crossAxisCount;
                       double childAspectRatio;
-
+                      double mainAxisExtent;
                       if (width >= 1200) {
                         crossAxisCount = 5;
                         childAspectRatio = 1.3;
+                        mainAxisExtent = 200;
                       } else if (width >= 800) {
                         crossAxisCount = 4;
                         childAspectRatio = 1.2;
+                        mainAxisExtent = 110;
                       } else if (width >= 600) {
-                        crossAxisCount = 3;
-                        childAspectRatio = 1.0;
+                        crossAxisCount = 4;
+                        childAspectRatio = 1.2;
+                        mainAxisExtent = 110;
                       } else {
                         crossAxisCount = 3;
                         childAspectRatio = 0.9;
+                        mainAxisExtent = 85;
                       }
 
                       return GridView.builder(
@@ -280,11 +285,11 @@ class _HomePageState extends State<HomePage> {
                         itemCount: features.length,
                         padding: const EdgeInsets.all(16),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: childAspectRatio,
-                        ),
+                            crossAxisCount: crossAxisCount,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: childAspectRatio,
+                            mainAxisExtent: mainAxisExtent),
                         itemBuilder: (context, index) {
                           return FeatureItem(
                             model: features[index],
@@ -423,7 +428,9 @@ class _HomePageState extends State<HomePage> {
                                   return ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     shrinkWrap: true,
-                                    itemCount: state.books.length,
+                                    itemCount: state.books.length > 7
+                                        ? 7
+                                        : state.books.length,
                                     itemBuilder: (context, index) {
                                       final book = state.books[index];
                                       final double current =
@@ -446,12 +453,16 @@ class _HomePageState extends State<HomePage> {
 
                                       return ZoomTapAnimation(
                                         onTap: () {
-                                          Navigator.push(
-                                            context,
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .push(
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ReadingBooksScreen(
-                                                      readingBooks: state.books,
+                                                    ContentPage(
+                                                      bookId: bookId,
+                                                      bookName:
+                                                          book['book_name'],
+                                                      scrollPosetion: current,
                                                     )),
                                           );
                                         },
@@ -662,6 +673,8 @@ class FeatureItem extends StatelessWidget {
       // تبلت
       iconSize = 40;
       fontSize = 14;
+      spacing = 10;
+    } else if (width >= 600) {
       spacing = 10;
     }
 
