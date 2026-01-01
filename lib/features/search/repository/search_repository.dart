@@ -32,7 +32,7 @@ class SearchRepository {
         return db;
       } catch (e) {
         // Database is closed, remove it and create new one
-        print('Database ${filePath} is closed, removing from cache');
+        print('Database $filePath is closed, removing from cache');
         _openDatabases.remove(filePath);
       }
     }
@@ -70,49 +70,56 @@ class SearchRepository {
   }
 
   static Future<List<SearchResultItem>> searchInAllBooks(String query) async {
-    print('Starting search in all books for query: $query');
+    print('🔍 Starting search in all books for query: $query');
     final base = await getBooksBaseDir();
     final dir = Directory(p.join(base.path, 'tmp'));
 
     if (!await dir.exists()) {
-      print('Books directory does not exist: ${dir.path}');
+      print('❌ Books directory does not exist: ${dir.path}');
       return [];
     }
 
     final dbFiles = await _listSqliteFilesRecursively(dir);
-    print('Found ${dbFiles.length} database files');
+    print('✅ Found ${dbFiles.length} .sqlite databases in ${dir.path}');
 
     List<SearchResultItem> results = [];
 
     for (var file in dbFiles) {
       try {
-        print('Searching in database: ${file.path}');
+        print('📘 Searching in database: ${file.path}');
         final db = await _getDatabase(file.path);
-        String rawName = p.basenameWithoutExtension(file.path);
 
-        String bookId =
-            rawName.startsWith('b') ? rawName.substring(1) : rawName;
+        // استخراج bookId از نام فایل مثل book_22_db.sqlite
+        final rawName = p.basenameWithoutExtension(file.path);
+        final RegExpMatch? match = RegExp(r'book_(\d+)_db').firstMatch(rawName);
+        if (match == null) {
+          print('⚠️ Invalid database name format: $rawName');
+          continue;
+        }
+
+        final String bookId = match.group(1)!;
+
         final res = await db.rawQuery(
-          "SELECT page, _text FROM bpages WHERE _text LIKE ?",
+          "SELECT page, _text FROM b${bookId}_pages WHERE _text LIKE ?",
           ['%$query%'],
         );
 
-        print('Found ${res.length} results in ${file.path}');
+        print('🔸 Found ${res.length} results in book $bookId');
         for (var row in res) {
           results.add(SearchResultItem(
-              pageNumber: row['page'] as dynamic,
-              text: row['_text'] as String,
-              bookName: bookId,
-              bookId: bookId));
+            pageNumber: row['page'] as dynamic,
+            text: row['_text'] as String,
+            bookName: bookId,
+            bookId: bookId,
+          ));
         }
       } catch (e) {
-        print('Error searching in database ${file.path}: $e');
-        // Remove problematic database from cache
-        _openDatabases.remove(file.path);
+        print('❌ Error searching in database ${file.path}: $e');
+        _openDatabases.remove(file.path); // حذف دیتابیس مشکل‌دار از کش
       }
     }
 
-    print('Total search results: ${results.length}');
+    print('✅ Total search results: ${results.length}');
     return results;
   }
 
@@ -120,80 +127,87 @@ class SearchRepository {
     required String query,
     required bool searchText,
     required bool searchTitle,
-    required String bookPath, // "all" or a specific path
+    required String bookPath, // "all" or specific path
   }) async {
-    print('Starting advanced search for query: $query');
+    print('🔍 Starting advanced search for "$query"');
     print(
-        'Search options: text=$searchText, title=$searchTitle, bookPath=$bookPath');
+        '🧩 Options: text=$searchText, title=$searchTitle, bookPath=$bookPath');
 
     final List<File> dbFiles;
     if (bookPath == "all") {
       final base = await getBooksBaseDir();
       final rootDir = Directory(p.join(base.path, 'tmp'));
       if (!await rootDir.exists()) {
-        print('Books directory does not exist: ${rootDir.path}');
+        print('❌ Books directory does not exist: ${rootDir.path}');
         return [];
       }
       dbFiles = await _listSqliteFilesRecursively(rootDir);
     } else {
       final file = File(bookPath);
       if (!await file.exists()) {
-        print('Book file does not exist: $bookPath');
+        print('❌ Book file does not exist: $bookPath');
         return [];
       }
       dbFiles = [file];
     }
 
-    print('Found ${dbFiles.length} database files to search');
+    print('✅ Found ${dbFiles.length} databases to search');
 
     List<SearchResultItem> results = [];
 
     for (var file in dbFiles) {
       try {
-        print('Searching in database: ${file.path}');
+        print('📘 Searching in database: ${file.path}');
         final db = await _getDatabase(file.path);
-        String rawName = p.basenameWithoutExtension(file.path);
 
-        String bookId =
-            rawName.startsWith('b') ? rawName.substring(1) : rawName;
+        // استخراج bookId صحیح از نام فایل
+        final rawName = p.basenameWithoutExtension(file.path);
+        final RegExpMatch? match = RegExp(r'book_(\d+)_db').firstMatch(rawName);
+        if (match == null) {
+          print('⚠️ Invalid database name format: $rawName');
+          continue;
+        }
+
+        final String bookId = match.group(1)!;
+
         if (searchText) {
           final res = await db.rawQuery(
-            "SELECT page, _text FROM bpages WHERE _text LIKE ?",
+            "SELECT page, _text FROM b${bookId}_pages WHERE _text LIKE ?",
             ['%$query%'],
           );
-
-          print('Found ${res.length} text results in ${file.path}');
+          print('🔹 Found ${res.length} text results in book $bookId');
           for (var row in res) {
             results.add(SearchResultItem(
-                pageNumber: row['page'] as dynamic,
-                text: row['_text'] as String,
-                bookName: bookId,
-                bookId: bookId));
+              pageNumber: row['page'] as dynamic,
+              text: row['_text'] as String,
+              bookName: bookId,
+              bookId: bookId,
+            ));
           }
         }
 
         if (searchTitle) {
           final res = await db.rawQuery(
-            "SELECT page, title FROM bgroups WHERE title LIKE ?",
+            "SELECT page, title FROM b${bookId}_chapters WHERE title LIKE ?",
             ['%$query%'],
           );
-          print('Found ${res.length} title results in ${file.path}');
+          print('🔹 Found ${res.length} title results in book $bookId');
           for (var row in res) {
             results.add(SearchResultItem(
-                pageNumber: row['page'] as dynamic,
-                text: row['title'] as String,
-                bookName: bookId,
-                bookId: bookId));
+              pageNumber: row['page'] as dynamic,
+              text: row['title'] as String,
+              bookName: bookId,
+              bookId: bookId,
+            ));
           }
         }
       } catch (e) {
-        print('Error searching in database ${file.path}: $e');
-        // Remove problematic database from cache
+        print('❌ Error searching in database ${file.path}: $e');
         _openDatabases.remove(file.path);
       }
     }
 
-    print('Total advanced search results: ${results.length}');
+    print('✅ Total advanced search results: ${results.length}');
     return results;
   }
 }

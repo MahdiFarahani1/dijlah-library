@@ -1,4 +1,3 @@
-import 'package:bookapp/core/extensions/widget_ex.dart';
 import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/shared/scaffold/appbar.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ class _AboutAppScreenState extends State<AboutAppScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
@@ -22,13 +22,9 @@ class _AboutAppScreenState extends State<AboutAppScreen>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
+    );
 
     _fadeController.forward();
   }
@@ -55,39 +51,39 @@ class _AboutAppScreenState extends State<AboutAppScreen>
             children: [
               _buildSection(
                 icon: Assets.newicons.commentInfo.path,
-                title: "من نحن",
+                title: "الوصول السهل",
                 content:
-                    "نحن مجموعة من المهتمين بنشر المعرفة الدينية الأصيلة بلغة واضحة وميسّرة، معتمدة على نتاجات سماحة السيد محمد باقر السيستاني(دامت بركاته). نسعى إلى تقريب مفاهيم العقيدة والأخلاق والفكر الإسلامي إلى القارئ المعاصر بما يجيب عن أسئلته ويبدّد الشبهات المطروحة في عصرنا.",
+                    "مكتبة الشهيد الحكيم بين يديك عبر تطبيق إلكتروني حديث. "
+                    "يمكنك تصفح العشرات من مؤلفات شهيد المحراب من هاتفك أو جهازك اللوحي بكل سهولة.",
               ),
               _buildSection(
-                icon: Assets.newicons.eye.path,
-                title: "رؤيتنا",
+                icon: Assets.newicons.bookOpenCover.path,
+                title: "تنوع المحتوى",
                 content:
-                    "أن يكون التطبيق منبرًا رائدًا يجمع بين الموثوقية والوضوح، ويُسهم في بناء وعي ديني راسخ، ويقدّم المعرفة بروح معاصرة وأصيلة معًا.",
+                    "يضم التطبيق مكتبة واسعة تشمل القرآن الكريم وعلومه، الأدب، التاريخ، السياسة، العقيدة وغيرها. "
+                    "كل قسم مصمم ليخدم الباحث والقارئ العام، مما يضمن تجربة معرفية غنية لكل مستخدم.",
               ),
               _buildSection(
                 icon: Assets.newicons.taskChecklist.path,
-                title: "مهمتنا",
+                title: "خدمات رقمية",
                 content:
-                    "• توفير مقالات وأجوبة معرفية وعقائدية وأخلاقية بلغة مبسطة وعميقة.\n"
-                    "• التصدي للشبهات الفكرية والمعرفية المعاصرة بروح علمية وهادئة.\n"
-                    "• جمع ونشر كتب ومحاضرات وكراسات سماحة السيد محمد باقر السيستاني.\n"
-                    "• دعم الباحثين والمهتمين بامتلاك رؤية أوضح حول الدين والهوية الإيمانية.",
+                    "يوفر التطبيق مجموعة من الخدمات المتقدمة مثل البحث الذكي، التعليق، إكمال المطالعة، "
+                    "المطابقة مع النسخ المطبوعة، وحفظ الكتب المفضلة. كما يتيح تحميل الكتب للقراءة دون اتصال بالإنترنت، "
+                    "وكل ذلك عبر واجهة سهلة وسلسة.",
               ),
               _buildSection(
-                icon: Assets.newicons.commentHeart.path,
-                title: "قيمنا",
+                icon: Assets.newicons.circleBookmark.path,
+                title: "الهوية والقيم",
                 content:
-                    "• الأصالة والدقة: اعتماد المصادر الموثوقة، مع الالتزام بالتحقيق العلمي الرصين.\n"
-                    "• الوضوح واليسر: تبسيط الطرح وتيسير الفهم دون الإخلال بجوهر المضمون.\n"
-                    "• المسؤولية والأمانة: تقديم المعرفة بما يراعي الصدق والموضوعية.\n"
-                    "• العطاء والخدمة: جعل المعرفة الدينية في متناول الجميع، بروح خدمة صادقة وعطاء مستمر.",
+                    "يحمل التطبيق اسم الشهيد الحكيم رمزًا للعلم والتضحية، ويقوم على قيم نشر الوعي وخدمة المجتمع. "
+                    "كما يلتزم بتعزيز الثقافة الإسلامية الأصيلة وترسيخ القيم الإنسانية.",
               ),
               _buildSection(
                 icon: Assets.newicons.teamCheck.path,
-                title: "فريقنا",
+                title: "تطوير مستمر",
                 content:
-                    "يتكوّن فريق التطبيق من مجموعة من طلبة العلم والمهتمين بالفكر الإسلامي، الذين يوحّدهم هدف نشر المعرفة الدينية، وإعانة الباحثين، وترسيخ الوعي والإيمان عند فئة الشباب.",
+                    "يعمل التطبيق على تحديث المحتوى بشكل دوري، ويسعى إلى إدخال تقنيات حديثة مثل القراءة الصوتية "
+                    "والذكاء الاصطناعي، بهدف أن يكون منصة بحثية رائدة في العالم الرقمي.",
               ),
             ],
           ),
@@ -96,8 +92,11 @@ class _AboutAppScreenState extends State<AboutAppScreen>
     );
   }
 
-  Widget _buildSection(
-      {required String icon, required String title, required String content}) {
+  Widget _buildSection({
+    required String icon,
+    required String title,
+    required String content,
+  }) {
     final theme = Theme.of(context);
 
     return Container(

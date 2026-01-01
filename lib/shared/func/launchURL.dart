@@ -27,4 +27,16 @@ class LaunchUrl {
       print('Error launching email: $e');
     }
   }
+
+  static Future<void> launchExternalLink(String? url) async {
+    if (url == null || url.isEmpty) return;
+    final Uri uri = Uri.parse(url);
+    try {
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        print('Could not launch $url');
+      }
+    } catch (e) {
+      print('Error launching URL: $e');
+    }
+  }
 }

@@ -12,7 +12,6 @@ import 'package:bookapp/shared/utils/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
 
 class StorageBookScreen extends StatefulWidget {
   final bool isBack;
@@ -51,7 +50,7 @@ class _StorageBookScreenState extends State<StorageBookScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "الكتب المحفوظة",
+            "مكتبتي المفضلة",
             style: TextStyle(
                 fontSize: 16,
                 color: Theme.of(context).primaryColor,
@@ -159,7 +158,6 @@ class _StorageBookScreenState extends State<StorageBookScreen> {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                  color: Colors.black87,
                                 ),
                               ),
                               trailing: Container(

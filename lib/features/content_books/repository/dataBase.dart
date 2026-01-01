@@ -13,6 +13,23 @@ class BookDatabaseHelper {
   Database? _database;
   String? _currentBookId;
   static bool _ffiInitialized = false;
+  Future<void> inspectBookZip(String id) async {
+    final basePath = (await getBaseBooksDir()).path;
+    final zipFile = File(p.join(basePath, 'book_${id}_db.zip')); // اسم واقعی
+
+    if (!await zipFile.exists()) {
+      print('❌ ZIP file not found.');
+      return;
+    }
+
+    final bytes = await zipFile.readAsBytes();
+    final archive = ZipDecoder().decodeBytes(bytes);
+
+    print('📂 ZIP contains ${archive.length} files:');
+    for (final file in archive) {
+      print('   • ${file.name} (${file.isFile ? "file" : "dir"})');
+    }
+  }
 
   Future<Directory> getBaseBooksDir() async {
     if (Platform.isAndroid) {
@@ -32,7 +49,7 @@ class BookDatabaseHelper {
 
   Future<String> _zipPath(String id) async {
     final base = await getBaseBooksDir();
-    return p.join(base.path, '$id.zip');
+    return p.join(base.path, 'book_${id}_db.zip');
   }
 
   Future<String> _extractDir(String id) async {
@@ -47,7 +64,7 @@ class BookDatabaseHelper {
 
   Future<String> _dbFilePath(String id) async {
     final dir = await _extractDir(id);
-    return p.join(dir, 'b$id.sqlite');
+    return p.join(dir, 'book_${id}_db.sqlite');
   }
 
   Future<String> _extractDatabaseFromZip(String id) async {
@@ -120,12 +137,13 @@ class BookDatabaseHelper {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getBookPages() async {
+  Future<List<Map<String, dynamic>>> getBookPages(String bookId) async {
     if (_database == null) {
       throw Exception('❌ دیتابیس هنوز باز نشده است!');
     }
     try {
-      final result = await _database!.query('bpages', orderBy: 'id ASC');
+      final result =
+          await _database!.query('b${bookId}_pages', orderBy: 'id ASC');
       return result;
     } catch (e) {
       print('❌ Error querying pages: $e');
@@ -133,12 +151,13 @@ class BookDatabaseHelper {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getBookGroup() async {
+  Future<List<Map<String, dynamic>>> getBookGroup(String bookId) async {
     if (_database == null) {
       throw Exception('❌ دیتابیس هنوز باز نشده است!');
     }
     try {
-      final result = await _database!.query('bgroups', orderBy: 'id ASC');
+      final result =
+          await _database!.query('b${bookId}_chapters', orderBy: 'id ASC');
       return result;
     } catch (e) {
       print('❌ Error querying groups: $e');

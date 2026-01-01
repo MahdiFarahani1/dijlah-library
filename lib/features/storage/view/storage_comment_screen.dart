@@ -169,7 +169,6 @@ class _CommentScreenState extends State<CommentScreen> {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              color: Colors.black87,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -241,16 +240,14 @@ class _CommentScreenState extends State<CommentScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade200),
+                    border: Border.all(color: Colors.white.withOpacity(0.5)),
                   ),
                   child: Text(
                     comment['_text'] ?? comment['comment_text'] ?? '',
                     style: const TextStyle(
                       fontSize: 14,
                       height: 1.5,
-                      color: Colors.black87,
                     ),
                   ),
                 ),

@@ -29,6 +29,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import '../repository/dataBase.dart';
+import 'package:bookapp/features/content_books/bloc/page_title/page_title_cubit.dart';
 
 class ContentPage extends StatefulWidget {
   final String bookId;
@@ -62,12 +63,19 @@ class _ContentPageState extends State<ContentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ContentCubit(
-          context: context,
-          settingsCubit: SettingsCubit(),
-          bookId: widget.bookId,
-          repository: BookDatabaseHelper()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ContentCubit(
+              context: context,
+              settingsCubit: SettingsCubit(),
+              bookId: widget.bookId,
+              repository: BookDatabaseHelper()),
+        ),
+        BlocProvider(
+          create: (context) => PageTitleCubit(widget.bookName),
+        ),
+      ],
       child: Builder(builder: (innerContext) {
         return WillPopScope(
           onWillPop: () async {
@@ -78,12 +86,23 @@ class _ContentPageState extends State<ContentPage> {
             appBar: AppBar(
               flexibleSpace: Container(),
               elevation: 4,
-              title: const Text(
-                'عنوان الكتاب',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              title: BlocBuilder<PageTitleCubit, PageTitleState>(
+                builder: (context, state) {
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                    child: Text(
+                      state.title,
+                      key: ValueKey<String>(state.title),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                },
               ),
               centerTitle: true,
               actions: [
@@ -187,8 +206,57 @@ class _ContentPageState extends State<ContentPage> {
                     );
                   }
                   if (state.status == ContentStatus.error) {
-                    return Text('erroooooooooooor');
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.red)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(32.0),
+                                child:
+                                    Assets.icons.error.image(color: Colors.red),
+                              )),
+                          SizedBox(height: 16),
+                          Text(
+                            'حدث خطأ أثناء تحميل الكتاب',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            'يرجى المحاولة مرة أخرى',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              context.read<ContentCubit>().reloadContent();
+                            },
+                            icon: Icon(Icons.refresh),
+                            label: Text('إعادة المحاولة'),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                   }
+
                   if (state.status == ContentStatus.success) {
                     return Stack(
                       alignment: Alignment.center,
@@ -361,8 +429,7 @@ class _ContentPageState extends State<ContentPage> {
                                             handlerName:
                                                 'onSearchPositionChanged',
                                             callback: (args) {
-                                              print("======2>>" +
-                                                  args.toString());
+                                              print("======2>>$args");
                                               // if (args.length == 2) {
                                               //   searchContentController.currentMatchIndex.value =
                                               //       args[0];
@@ -608,8 +675,16 @@ class _ContentPageState extends State<ContentPage> {
                                                   .onPrimary)),
                                       handler: FlutterSliderHandler(
                                           child: const SizedBox()),
+                                      onDragging: (handlerIndex, lower, upper) {
+                                        innerContext
+                                            .read<PageTitleCubit>()
+                                            .showPageNumber(lower);
+                                      },
                                       onDragCompleted:
                                           (handlerIndex, lower, upper) async {
+                                        innerContext
+                                            .read<PageTitleCubit>()
+                                            .resetTitle();
                                         final controller = webViewController;
                                         if (stateSetting.pageDirection ==
                                             PageDirection.vertical) {

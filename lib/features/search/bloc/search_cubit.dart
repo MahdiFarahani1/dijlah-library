@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:bookapp/features/search/repository/search_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path/path.dart' as p;
 
 part 'search_state.dart';
 

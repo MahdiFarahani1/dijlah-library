@@ -28,6 +28,13 @@ class ContentCubit extends Cubit<ContentState> {
     required this.settingsCubit,
     required this.context,
   }) : super(const ContentState()) {
+    print('sdffsdfds');
+    _init(context);
+    settingsSubscription = settingsCubit.stream.listen((settingsState) {
+      _rebuildHtml(settingsState, context);
+    });
+  }
+  void reloadContent() {
     _init(context);
     settingsSubscription = settingsCubit.stream.listen((settingsState) {
       _rebuildHtml(settingsState, context);
@@ -45,13 +52,13 @@ class ContentCubit extends Cubit<ContentState> {
 
       // Check if book file exists first
       final baseDir = await repository.getBaseBooksDir();
-      final zipPath = p.join(baseDir.path, '$bookId.zip');
+      final zipPath = p.join(baseDir.path, 'book_${bookId}_db.zip');
       if (!File(zipPath).existsSync()) {
         throw Exception('📦 فایل کتاب $bookId.zip یافت نشد! مسیر: $zipPath');
       }
 
       await repository.openDatabaseForBook(bookId);
-      final loadedPages = await repository.getBookPages();
+      final loadedPages = await repository.getBookPages(bookId);
       print('📚 Loaded ${loadedPages.length} pages');
 
       final settingsState = settingsCubit.state;
@@ -138,7 +145,7 @@ class ContentCubit extends Cubit<ContentState> {
           <div class='comment-button'></div>
           <span class='page-number'>${i + 1}</span>
           <br>
-          <div class='$bookText text_style' id='page___$i' style="font-size:${fontSize}px !important; line-height:${lineHeight} !important;">
+          <div class='$bookText text_style' id='page___$i' style="font-size:${fontSize}px !important; line-height:$lineHeight !important;">
             <div style='text-align:center;'><img class='pageLoading' src='asset://images/loader.gif'></div>
           </div>
         </div>
@@ -222,8 +229,14 @@ class ContentCubit extends Cubit<ContentState> {
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
     settingsSubscription.cancel();
+
+    await repository.close();
+    // 🔥 WebView رو هم آزاد کن
+    try {
+      inAppWebViewController.stopLoading();
+    } catch (_) {}
     return super.close();
   }
 }

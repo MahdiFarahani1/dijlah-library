@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bookapp/core/constant/const_class.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -11,34 +12,51 @@ class FileDownloader {
     required String url,
     String? fileName,
     String? customDirectoryPath,
+    String? customFullPath,
     ProgressCallback? onProgress,
     CompleteCallback? onComplete,
     ErrorCallback? onError,
   }) async {
     try {
-      // مسیر ذخیره
+      // مسیر ذخیره فایل
       Directory baseDir = await getApplicationDocumentsDirectory();
       String dirPath = customDirectoryPath ?? baseDir.path;
 
-      String fullPath = '$dirPath/${fileName ?? url.split('/').last}';
+      String fullPath =
+          '$dirPath/book_${fileName ?? url.split('/').last}_db.zip';
 
-      // ساخت دایرکتوری اگر وجود نداشت
+      String providedFullPath = customFullPath ?? fullPath;
+      // ساخت دایرکتوری در صورت نیاز
       await Directory(dirPath).create(recursive: true);
 
       Dio dio = Dio();
+
+      // تنظیمات هدر در صورت داشتن API KEY
+      final options = Options(
+        headers: {
+          'x-api-key': ConstantApp.apiKey,
+        },
+        responseType: ResponseType.bytes,
+        followRedirects: true,
+        validateStatus: (status) => status != null && status < 500,
+      );
+
       await dio.download(
         url,
-        fullPath,
+        providedFullPath,
+        options: options,
         onReceiveProgress: (received, total) {
           if (total != -1) {
             double progress = received / total;
             onProgress?.call(progress);
-          } else {}
+          }
         },
       );
-      print('fullPath: $fullPath');
-      onComplete?.call(fullPath);
+
+      print('✅ File saved at: $providedFullPath');
+      onComplete?.call(providedFullPath);
     } catch (e) {
+      print('❌ Download error: $e');
       onError?.call(e.toString());
     }
   }

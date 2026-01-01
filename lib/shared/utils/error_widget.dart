@@ -18,7 +18,7 @@ class ApiErrorWidget extends StatelessWidget {
           children: [
             // انیمیشن خطا
             Lottie.asset(
-              Assets.lottie.error404,
+              Assets.lottie.noConnection,
               width: 160,
               height: 160,
               fit: BoxFit.contain,

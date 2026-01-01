@@ -1,8 +1,12 @@
 class HomeModel {
   final List<SliderModel> sliders;
   final List<LastBookModel> lastBooks;
+  final List<PageModel> pageModel;
 
-  HomeModel({required this.sliders, required this.lastBooks});
+  HomeModel(
+      {required this.sliders,
+      required this.lastBooks,
+      required this.pageModel});
 
   factory HomeModel.fromJson(Map<String, dynamic> json) {
     return HomeModel(
@@ -11,6 +15,9 @@ class HomeModel {
           .toList(),
       lastBooks: (json['last_books'] as List<dynamic>)
           .map((item) => LastBookModel.fromJson(item))
+          .toList(),
+      pageModel: (json['pages'] as List<dynamic>)
+          .map((item) => PageModel.fromJson(item))
           .toList(),
     );
   }
@@ -70,6 +77,39 @@ class LastBookModel {
       writer: json['writer'],
       pdf: json['pdf'],
       photoUrl: json['photo_url'],
+    );
+  }
+}
+
+class PageModel {
+  final int id;
+  final String lang;
+  final String title;
+  final String description;
+  final String content;
+  final int showCounter;
+  final String slug;
+
+  PageModel({
+    required this.id,
+    required this.lang,
+    required this.title,
+    required this.description,
+    required this.content,
+    required this.showCounter,
+    required this.slug,
+  });
+
+  // تبدیل JSON به PageModel
+  factory PageModel.fromJson(Map<String, dynamic> json) {
+    return PageModel(
+      id: json['id'] as int,
+      lang: json['lang'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      content: json['content'] as String,
+      showCounter: json['show_counter'] as int,
+      slug: json['slug'] as String,
     );
   }
 }

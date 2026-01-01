@@ -1,17 +1,15 @@
 import 'package:bookapp/core/extensions/widget_ex.dart';
 import 'package:bookapp/features/content_books/view/content_page.dart';
-import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
 import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/shared/scaffold/back_btn.dart';
 import 'package:bookapp/shared/utils/esay_size.dart';
 import 'package:bookapp/shared/utils/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BookGroupsPage extends StatefulWidget {
   final String bookId;
   final String bookName;
-  final Future<List<Map<String, dynamic>>> Function() getBookGroup;
+  final Future<List<Map<String, dynamic>>> Function(String bookId) getBookGroup;
 
   const BookGroupsPage(
       {super.key,
@@ -57,10 +55,10 @@ class _BookGroupsPageState extends State<BookGroupsPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
-          'مجموعات الكتاب',
+          'فهرست الكتاب',
           style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.bold),
+            color: Theme.of(context).primaryColor,
+          ),
         ),
         centerTitle: true,
         elevation: 0,
@@ -135,7 +133,7 @@ class _BookGroupsPageState extends State<BookGroupsPage> {
           // Groups List
           Expanded(
             child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: widget.getBookGroup(),
+              future: widget.getBookGroup(widget.bookId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CustomLoading.fadingCircle(context));
@@ -267,7 +265,7 @@ class _BookGroupsPageState extends State<BookGroupsPage> {
               builder: (_) => ContentPage(
                 bookId: widget.bookId,
                 bookName: widget.bookName,
-                scrollPosetion: pos,
+                scrollPosetion: pos - 1,
               ),
             ),
           );

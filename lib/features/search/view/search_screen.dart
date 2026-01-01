@@ -1,4 +1,5 @@
 import 'package:bookapp/core/extensions/widget_ex.dart';
+import 'package:bookapp/core/utils/getZip_Sqlite.dart';
 import 'package:bookapp/features/content_books/view/content_page.dart';
 import 'package:bookapp/features/storage/repository/db_helper.dart';
 import 'package:bookapp/gen/assets.gen.dart';
@@ -40,6 +41,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    autoExtractMissingSqlites();
     _loadBooksFromDirectory();
   }
 
@@ -328,7 +330,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            'تأكد من وجود ملفات الكتب في المسار:\n/storage/emulated/0/Download/Books/tmp/',
+            'تأكد من وجود ملفات الكتب في المسار:  ',
             style: TextStyle(
               color: Theme.of(context)
                   .colorScheme
@@ -373,55 +375,72 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> _loadBooksFromDirectory() async {
     try {
       final base = await getBooksBaseDir();
-      final String baseDirPath = path.join(base.path, 'tmp');
+      final String baseDirPath = base.path;
       final Directory baseDirectory = Directory(baseDirPath);
 
       if (await baseDirectory.exists()) {
+        // 🔍 حالا همه فایل‌ها رو از فولدر Books و زیرشاخه‌ها می‌گیریم
         final List<FileSystemEntity> entities =
-            await baseDirectory.list().toList();
+            await baseDirectory.list(recursive: true).toList();
 
-        final List<Directory> bookDirectories =
-            entities.whereType<Directory>().toList();
-
+        // لیست نهایی کتاب‌ها (با گزینه‌ی "همه کتاب‌ها" در اول)
         List<Map<String, String>> foundBooks = [
           {'book_id': '0', 'book_name': 'جميع الكتب', 'path': 'all'},
         ];
 
-        for (Directory bookDir in bookDirectories) {
-          final String bookId = path.basename(bookDir.path);
-          final String sqlitePath = path.join(bookDir.path, 'b$bookId.sqlite');
+        // 🎯 فقط فایل‌های SQLite را انتخاب کن
+        final List<File> sqliteFiles = entities
+            .whereType<File>()
+            .where((file) => path.extension(file.path) == '.sqlite')
+            .toList();
 
-          final File sqliteFile = File(sqlitePath);
-          if (await sqliteFile.exists()) {
+        print(
+            '✅ Found ${sqliteFiles.length} .sqlite databases in $baseDirPath');
+
+        for (File sqliteFile in sqliteFiles) {
+          final String fileName = path.basename(sqliteFile.path);
+
+          // 1️⃣ تلاش برای شناسایی الگوی اصلی: book_XX_db.sqlite
+          RegExpMatch? match = RegExp(r'book_(\d+)_db').firstMatch(fileName);
+
+          // 2️⃣ اگر با الگوی بالا match نشد، الگوی bXX.sqlite رو هم امتحان کن
+          match ??= RegExp(r'b(\d+)\.sqlite$').firstMatch(fileName);
+
+          if (match != null && match.groupCount >= 1) {
+            final String bookId = match.group(1)!;
+
             foundBooks.add({
               'book_id': bookId,
-              'book_name': bookId,
-              'path': sqlitePath,
+              'book_name': 'كتاب $bookId', // فعلاً به‌صورت پیش‌فرض
+              'path': sqliteFile.path,
             });
+          } else {
+            print('⚠️ Skipped unrecognized file: $fileName');
           }
         }
 
+        // 🔄 به‌روزرسانی state
         setState(() {
           books = foundBooks;
         });
 
         if (foundBooks.length == 1) {
-          // Only "جميع الكتب" option available
-          print('No books found in directory: $baseDirPath');
+          print('❌ No books found in directory: $baseDirPath');
         } else {
           print(
-              'Found ${foundBooks.length - 1} books in directory: $baseDirPath');
+              '📚 Found ${foundBooks.length - 1} books in directory: $baseDirPath');
         }
       } else {
-        print('Books directory does not exist: $baseDirPath');
+        print('❌ Books directory does not exist: $baseDirPath');
         setState(() {
           books = [
             {'book_id': '0', 'book_name': 'جميع الكتب', 'path': 'all'}
           ];
         });
       }
-    } catch (e) {
-      print('Error loading books from directory: $e');
+    } catch (e, s) {
+      print('❌ Error loading books from directory: $e');
+      print('Stack: $s');
       setState(() {
         books = [
           {'book_id': '0', 'book_name': 'جميع الكتب', 'path': 'all'}
@@ -828,7 +847,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: Text(
                     'بحث متقدم',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).scaffoldBackgroundColor,
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),

@@ -14,7 +14,7 @@ class AppSnackBar {
   }
 
   static void showInfo(BuildContext context, String message) {
-    _show(context, message, Colors.blueAccent, Icons.info_outline);
+    _show(context, message, Theme.of(context).primaryColor, Icons.info_outline);
   }
 
   static void _show(
@@ -24,7 +24,7 @@ class AppSnackBar {
       SnackBar(
         content: Row(
           children: [
-            Icon(icon, color: Colors.white),
+            Icon(icon, color: Theme.of(context).scaffoldBackgroundColor),
             const SizedBox(width: 12),
             Expanded(child: Text(message, style: TextStyle(fontSize: 15))),
           ],

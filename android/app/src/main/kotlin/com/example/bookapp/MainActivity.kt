@@ -1,4 +1,6 @@
-package com.dijlah.almarifaaldenyah
+package com.dijlah.library
+
+
 
 import io.flutter.embedding.android.FlutterActivity
 

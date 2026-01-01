@@ -1,12 +1,17 @@
 import 'package:bookapp/core/constant/const_class.dart';
+import 'package:bookapp/core/utils/check_connection.dart'; // [New]
 import 'package:bookapp/features/books/bloc/download/download_cubit.dart';
 import 'package:bookapp/features/books/bloc/download/download_state.dart';
+import 'package:bookapp/features/books/bloc/header_anim/cubit/header_animation_cubit.dart';
 import 'package:bookapp/features/books/model/model_books.dart';
+import 'package:bookapp/features/books/repositoreis/book_list_db_helper.dart';
 import 'package:bookapp/features/books/repositoreis/book_repository.dart';
+import 'package:bookapp/features/content_books/repository/dataBase.dart';
 import 'package:bookapp/features/content_books/view/content_page.dart';
 import 'package:bookapp/features/storage/repository/db_helper.dart';
 import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/shared/func/downloaded_book.dart';
+import 'package:bookapp/shared/ui_helper/snackbar_common.dart';
 import 'package:bookapp/shared/utils/images_network.dart';
 import 'package:bookapp/shared/utils/loading.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +30,16 @@ class BookItemTile extends StatelessWidget {
     super.key,
   });
 
+  // Helper for offline check
+  Future<bool> _checkInternet(BuildContext context) async {
+    if (!await hasInternetConnection()) {
+      AppSnackBar.showError(context, 'لا يوجد اتصال بالإنترنت');
+
+      return false;
+    }
+    return true;
+  }
+
   // Future<bool> _requestStoragePermission() async {
   //   final status = await Permission.storage.status;
   //   if (status.isGranted) return true;
@@ -35,7 +50,8 @@ class BookItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = repo.imageUrl(book.img);
+    print(book.photoUrl);
+    final imageUrl = book.photoUrl;
 
     return BlocBuilder<DownloadCubit, Map<String, DownloadState>>(
       builder: (context, downloadStates) {
@@ -44,6 +60,7 @@ class BookItemTile extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
+            BookDatabaseHelper().inspectBookZip(15.toString());
             if (downloadState.isDownloadedBook) {
               print(
                 book.id.toString(),
@@ -97,67 +114,81 @@ class BookItemTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        book.writer,
+                        book.writerName,
                         style: const TextStyle(
                           fontSize: 13,
                           color: Colors.grey,
                         ),
                       ),
                       const SizedBox(height: 6),
-                      if (book.dateTime != null)
-                        Text(
-                          'التاریخ: ${DateFormat('yyyy/MM/dd').format(DateTime.fromMillisecondsSinceEpoch(book.dateTime! * 1000))}',
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey,
-                          ),
+                      Text(
+                        'التاریخ: ${DateFormat('yyyy/MM/dd').format(DateTime.fromMillisecondsSinceEpoch(book.dateTime * 1000))}',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
                         ),
+                      ),
                       const SizedBox(height: 10),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Assets.newicons.filePdf.image(
-                              width: 22,
-                              height: 22,
-                              color: Theme.of(context).primaryColor),
+                          (book.pdfLink != null && book.pdfLink!.isNotEmpty)
+                              ? Assets.newicons.filePdf.image(
+                                  width: 22,
+                                  height: 22,
+                                  color: Theme.of(context).primaryColor)
+                              : SizedBox.shrink(),
                           const SizedBox(width: 6),
-                          GestureDetector(
-                            onTap: downloadState.isDownloadingPdf
-                                ? null
-                                : () => handleDownloadOrOpen(
-                                        context,
-                                        downloadState,
-                                        ConstantApp.upload + book.pdf!,
-                                        book.pdf!.split('/').last, () {
-                                      context
-                                          .read<DownloadCubit>()
-                                          .startPdfDownload(book.id.toString(),
-                                              ConstantApp.upload + book.pdf!);
-                                    }),
-                            child: Text(
-                              downloadState.isDownloadingPdf
-                                  ? 'جاري التحميل..'
-                                  : downloadState.isDownloadedPdf
-                                      ? 'تصفح ملف PDF'
-                                      : 'تحميل pdf',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: downloadState.isDownloadingPdf
-                                    ? Colors.grey
-                                    : const Color(0xFF2196F3),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
+                          (book.pdfLink != null && book.pdfLink!.isNotEmpty)
+                              ? GestureDetector(
+                                  onTap: downloadState.isDownloadingPdf
+                                      ? null
+                                      : () async {
+                                          print(
+                                              'pdf link book!!!!! ${book.pdfLink}');
+                                          if (!await _checkInternet(context))
+                                            return;
+
+                                          handleDownloadOrOpen(
+                                              context,
+                                              downloadState,
+                                              book.pdfLink,
+                                              '${book.id}.pdf', () {
+                                            context
+                                                .read<DownloadCubit>()
+                                                .startPdfDownload(
+                                                    book.id.toString(),
+                                                    book.pdfLink);
+                                          });
+                                        },
+                                  child: Text(
+                                    downloadState.isDownloadingPdf
+                                        ? 'جاري التحميل..'
+                                        : downloadState.isDownloadedPdf
+                                            ? 'تصفح ملف PDF'
+                                            : 'تحميل pdf',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: downloadState.isDownloadingPdf
+                                          ? Colors.grey
+                                          : const Color(0xFF2196F3),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox.shrink(),
                           const Spacer(),
                           ZoomTapAnimation(
                             onTap: () async {
                               if (downloadState.isDownloadedBook == false) {
+                                if (!await _checkInternet(context))
+                                  return; // [Check]
+
                                 handleBookDownload(
                                   context,
                                   downloadState,
                                   ConstantApp.downloadBook + book.id.toString(),
-                                  'b${book.id.toString()}.zip',
+                                  'book_${book.id.toString()}_db.zip',
                                   () async {
                                     await context
                                         .read<DownloadCubit>()
@@ -167,6 +198,8 @@ class BookItemTile extends StatelessWidget {
                                         );
                                     DatabaseStorageHelper.insertBookNames(
                                         book.title, book.id);
+
+                                    BookListDbHelper.upsertBook(book);
                                   },
                                 );
                               }
@@ -221,24 +254,56 @@ class BookItemTile extends StatelessWidget {
   }
 }
 
-class BookDownloadList extends StatelessWidget {
+class BookDownloadList extends StatefulWidget {
   final List<BookModel> books;
   const BookDownloadList({super.key, required this.books});
 
   @override
+  State<BookDownloadList> createState() => _BookDownloadListState();
+}
+
+class _BookDownloadListState extends State<BookDownloadList> {
+  late ScrollController scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController = ScrollController();
+
+    scrollController.addListener(() {
+      final offset = scrollController.offset;
+
+      if (offset > 0) {
+        context.read<HeaderAnimationCubit>().hideHeader();
+      } else {
+        context.read<HeaderAnimationCubit>().showHeader();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final repo = context.read<BookRepository>();
+
     return ListView.builder(
+      controller: scrollController,
       padding: const EdgeInsets.all(16),
-      itemCount: books.length,
+      itemCount: widget.books.length,
       itemBuilder: (context, index) {
-        final book = books[index];
+        final book = widget.books.reversed.toList()[index];
         return BookItemTile(
-          key: ValueKey(book.pdf),
+          key: ValueKey(book.id),
           book: book,
           repo: repo,
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

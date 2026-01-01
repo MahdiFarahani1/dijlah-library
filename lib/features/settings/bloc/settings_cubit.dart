@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:bookapp/config/theme/theme.dart';
 import 'package:bookapp/features/settings/bloc/settings_state.dart';
 import 'package:bookapp/features/settings/view/settings_screen.dart';
@@ -101,12 +99,11 @@ class SettingsCubit extends Cubit<SettingsState> {
 }
 
 List<Color> backgrounds = [
-  Color.fromARGB(255, 12, 85, 138), // آبی تیره
-  Color(0xFF2D6A4F),
+  Color.fromRGBO(1, 35, 58, 1), // آبی نفتی-سرمه‌ای لوکس
+  const Color(0xFF0C5544), // سبز اصلی که میخواستی
+  const Color(0xFF8C4A33), // قهوه‌ای شکلاتی کلاسیک
 
-  Color.fromARGB(255, 166, 138, 88), // قهوه‌ای/طلایی ملایم
-  Color.fromARGB(255, 135, 140, 162), // خاکستری مایل به آبی
-  Color(0xFF720026),
-
-  Color(0xFFF46B45),
+  const Color(0xFF4B3F72), // بنفش تیره سلطنتی
+  const Color(0xFFB23A48), // قرمز شرابی شیک
+  const Color(0xFFE59500), // طلایی مدرن گرم
 ];

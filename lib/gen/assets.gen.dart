@@ -14,11 +14,14 @@ import 'package:flutter/widgets.dart';
 class $AssetsDatabaseGen {
   const $AssetsDatabaseGen();
 
+  /// File path: assets/database/booklist.sqlite
+  String get booklist => 'assets/database/booklist.sqlite';
+
   /// File path: assets/database/bookmark.sqlite
   String get bookmark => 'assets/database/bookmark.sqlite';
 
   /// List of all assets
-  List<String> get values => [bookmark];
+  List<String> get values => [booklist, bookmark];
 }
 
 class $AssetsFontsGen {
@@ -99,6 +102,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/downloadAll.png
   AssetGenImage get downloadAll =>
       const AssetGenImage('assets/icons/downloadAll.png');
+
+  /// File path: assets/icons/error.png
+  AssetGenImage get error => const AssetGenImage('assets/icons/error.png');
 
   /// File path: assets/icons/fi-rr-add.png
   AssetGenImage get fiRrAdd =>
@@ -2130,6 +2136,7 @@ class $AssetsIconsGen {
         downBook,
         download,
         downloadAll,
+        error,
         fiRrAdd,
         fiRrAddressBook,
         fiRrAlarmClock,
@@ -2642,24 +2649,15 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/40.jpg
-  AssetGenImage get a40 => const AssetGenImage('assets/images/40.jpg');
-
   /// File path: assets/images/FAQs-amico (1).png
   AssetGenImage get fAQsAmico1 =>
       const AssetGenImage('assets/images/FAQs-amico (1).png');
 
-  /// File path: assets/images/b1.jpg
-  AssetGenImage get b1 => const AssetGenImage('assets/images/b1.jpg');
-
-  /// File path: assets/images/b2.jpg
-  AssetGenImage get b2 => const AssetGenImage('assets/images/b2.jpg');
-
-  /// File path: assets/images/b3.jpg
-  AssetGenImage get b3 => const AssetGenImage('assets/images/b3.jpg');
-
   /// File path: assets/images/bg-sp.jpg
   AssetGenImage get bgSp => const AssetGenImage('assets/images/bg-sp.jpg');
+
+  /// File path: assets/images/biography.htm
+  String get biography => 'assets/images/biography.htm';
 
   /// File path: assets/images/bookmark.png
   AssetGenImage get bookmark =>
@@ -2672,6 +2670,22 @@ class $AssetsImagesGen {
   /// File path: assets/images/bookmark2.png
   AssetGenImage get bookmark2 =>
       const AssetGenImage('assets/images/bookmark2.png');
+
+  /// File path: assets/images/cn-1.png
+  AssetGenImage get cn1 => const AssetGenImage('assets/images/cn-1.png');
+
+  /// File path: assets/images/cn-2.png
+  AssetGenImage get cn2 => const AssetGenImage('assets/images/cn-2.png');
+
+  /// File path: assets/images/cn-3.png
+  AssetGenImage get cn3 => const AssetGenImage('assets/images/cn-3.png');
+
+  /// File path: assets/images/cn-4.png
+  AssetGenImage get cn4 => const AssetGenImage('assets/images/cn-4.png');
+
+  /// File path: assets/images/co-app-hs-lib.png
+  AssetGenImage get coAppHsLib =>
+      const AssetGenImage('assets/images/co-app-hs-lib.png');
 
   /// File path: assets/images/com-c-1.png
   AssetGenImage get comC1 => const AssetGenImage('assets/images/com-c-1.png');
@@ -2698,51 +2712,54 @@ class $AssetsImagesGen {
   AssetGenImage get downloadedbook =>
       const AssetGenImage('assets/images/downloadedbook.png');
 
-  /// File path: assets/images/in-sp-1.png
-  AssetGenImage get inSp1 => const AssetGenImage('assets/images/in-sp-1.png');
+  /// File path: assets/images/follow.png
+  AssetGenImage get follow => const AssetGenImage('assets/images/follow.png');
 
-  /// File path: assets/images/in-sp-2.png
-  AssetGenImage get inSp2 => const AssetGenImage('assets/images/in-sp-2.png');
+  /// File path: assets/images/icons8-empty-64.png
+  AssetGenImage get icons8Empty64 =>
+      const AssetGenImage('assets/images/icons8-empty-64.png');
 
-  /// File path: assets/images/in-sp-3.png
-  AssetGenImage get inSp3 => const AssetGenImage('assets/images/in-sp-3.png');
+  /// File path: assets/images/insurance.png
+  AssetGenImage get insurance =>
+      const AssetGenImage('assets/images/insurance.png');
 
   /// File path: assets/images/loader.gif
   AssetGenImage get loader => const AssetGenImage('assets/images/loader.gif');
 
-  /// File path: assets/images/logo-appbar.png
-  AssetGenImage get logoAppbar =>
-      const AssetGenImage('assets/images/logo-appbar.png');
-
-  /// File path: assets/images/logo-header.png
-  AssetGenImage get logoHeader =>
-      const AssetGenImage('assets/images/logo-header.png');
-
-  /// File path: assets/images/logo-sp.png
-  AssetGenImage get logoSp => const AssetGenImage('assets/images/logo-sp.png');
-
-  /// File path: assets/images/question.jpg
-  AssetGenImage get questionJpg =>
-      const AssetGenImage('assets/images/question.jpg');
-
   /// File path: assets/images/question.png
-  AssetGenImage get questionPng =>
+  AssetGenImage get question =>
       const AssetGenImage('assets/images/question.png');
+
+  /// File path: assets/images/rules.png
+  AssetGenImage get rules => const AssetGenImage('assets/images/rules.png');
 
   /// File path: assets/images/share.png
   AssetGenImage get share => const AssetGenImage('assets/images/share.png');
 
+  /// File path: assets/images/source-document.png
+  AssetGenImage get sourceDocument =>
+      const AssetGenImage('assets/images/source-document.png');
+
+  /// File path: assets/images/splash.jpg
+  AssetGenImage get splash => const AssetGenImage('assets/images/splash.jpg');
+
+  /// File path: assets/images/team-check.png
+  AssetGenImage get teamCheck =>
+      const AssetGenImage('assets/images/team-check.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [
-        a40,
+  List<dynamic> get values => [
         fAQsAmico1,
-        b1,
-        b2,
-        b3,
         bgSp,
+        biography,
         bookmark,
         bookmark1,
         bookmark2,
+        cn1,
+        cn2,
+        cn3,
+        cn4,
+        coAppHsLib,
         comC1,
         comC2,
         comment,
@@ -2750,16 +2767,16 @@ class $AssetsImagesGen {
         download,
         downloadBook,
         downloadedbook,
-        inSp1,
-        inSp2,
-        inSp3,
+        follow,
+        icons8Empty64,
+        insurance,
         loader,
-        logoAppbar,
-        logoHeader,
-        logoSp,
-        questionJpg,
-        questionPng,
-        share
+        question,
+        rules,
+        share,
+        sourceDocument,
+        splash,
+        teamCheck
       ];
 }
 
@@ -2769,8 +2786,28 @@ class $AssetsLottieGen {
   /// File path: assets/lottie/Error 404.json
   String get error404 => 'assets/lottie/Error 404.json';
 
+  /// File path: assets/lottie/Lost Connection.json
+  String get lostConnection => 'assets/lottie/Lost Connection.json';
+
+  /// File path: assets/lottie/No Internet Connection.json
+  String get noInternetConnection =>
+      'assets/lottie/No Internet Connection.json';
+
+  /// File path: assets/lottie/No internet connection(1).json
+  String get noInternetConnection1 =>
+      'assets/lottie/No internet connection(1).json';
+
+  /// File path: assets/lottie/noConnection.json
+  String get noConnection => 'assets/lottie/noConnection.json';
+
   /// List of all assets
-  List<String> get values => [error404];
+  List<String> get values => [
+        error404,
+        lostConnection,
+        noInternetConnection,
+        noInternetConnection1,
+        noConnection
+      ];
 }
 
 class $AssetsNewiconsGen {

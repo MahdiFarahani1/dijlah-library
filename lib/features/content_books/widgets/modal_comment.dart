@@ -64,7 +64,9 @@ class ModalComment {
                       ),
                     ),
                   ),
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -91,11 +93,12 @@ class ModalComment {
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                   ),
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 20),
 
-                // Action buttons (Submit & Cancel)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -153,7 +156,11 @@ class ModalComment {
                               ),
                             );
                           }
-                        } else {}
+                        } else {
+                          Navigator.pop(context);
+                          AppSnackBar.showWarning(
+                              context, "لم يتم حفظ أي تعليق!");
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         padding:

@@ -19,7 +19,7 @@ class StoragePageScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "الصفحات المحفوظة",
+          "اشارات مرجعية",
           style: TextStyle(
             fontSize: 16,
             color: Theme.of(context).primaryColor,
@@ -120,7 +120,6 @@ class _PageBookmarkItem extends StatelessWidget {
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
-                color: Colors.black87,
               ),
             ),
             subtitle: Padding(

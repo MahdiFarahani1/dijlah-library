@@ -101,7 +101,7 @@ class ReadingBooksScreen extends StatelessWidget {
                               ).animate().fadeIn(duration: 450.ms);
                             }
                             return Container(
-                              color: theme.colorScheme.surfaceVariant,
+                              color: theme.colorScheme.surfaceContainerHighest,
                               child: Icon(
                                 Icons.menu_book_rounded,
                                 size: 64,

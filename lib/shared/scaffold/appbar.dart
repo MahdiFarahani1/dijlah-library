@@ -3,8 +3,6 @@ import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/shared/scaffold/back_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomAppbar {
   static AppBar littleAppBar(BuildContext context,
@@ -43,7 +41,7 @@ class CustomAppbar {
             }),
             SizedBox(width: 6.5),
             Text(
-              'المعرفة الدينية',
+              "مكتبة دجلة",
               style: TextStyle(
                   fontSize: 15, color: Theme.of(context).primaryColor),
             ),
@@ -63,10 +61,10 @@ class CustomAppbar {
                   onTap: () {
                     MainWrapper.controllerNavBar.jumpToTab(0);
                   },
-                  child: Assets.images.logoAppbar.image(
-                      width: 30,
-                      height: 30,
-                      color: Theme.of(context).primaryColor))
+                  child: Assets.images.coAppHsLib.image(
+                    width: 30,
+                    height: 30,
+                  ))
             ],
           ),
         ),

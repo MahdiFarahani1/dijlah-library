@@ -19,21 +19,25 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   final List<_OnboardItem> pages = [
     _OnboardItem(
-      title: 'المعرفة الدينية',
-      description:
-          'يهتم بتبيين المعرفة الدينية على وجه ميسر وبلغة واضحة، لتسهيل الوصول إليها لكل باحث عن الحقيقة وساع إليها.',
-      image: Assets.images.inSp1.path,
+      title: 'مكتبتك الشاملة',
+      description: 'آلاف الكتب جاهزة لترافقك أينما كنت.',
+      image: Assets.images.cn1.path,
     ),
     _OnboardItem(
-      title: 'كتب ومؤلفات',
-      description:
-          'مجموعة من الكتب العقائدية والفكرية للسيد محمد باقر السيستاني حفظه الله',
-      image: Assets.images.inSp2.path,
+      title: 'معرفة بلا حدود',
+      description: 'اكتشف محتوى متنوعًا بضغطة واحدة.',
+      image: Assets.images.cn2.path,
     ),
     _OnboardItem(
-      title: 'أسئلة وأجوبة',
-      description: 'أسئلة وأجوبة متنوعة ترتبط بالمعرفة الدينية',
-      image: Assets.images.inSp3.path,
+      title: 'رحلة قراءة مستمرة',
+      description: 'كل ما تحتاجه من كتب في متناول يدك.',
+      image: Assets.images.cn3.path,
+    ),
+    _OnboardItem(
+      title: 'نافذة مفتوحة على المعرفة',
+      description:
+          'مكتبة تغطي الأدب، العلوم، والفكر، لتجعل القراءة جزءًا من يومك أينما كنت.',
+      image: Assets.images.cn4.path,
     ),
   ];
 

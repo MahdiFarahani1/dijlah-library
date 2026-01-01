@@ -21,12 +21,10 @@ class AppTheme {
         primaryContainer: Colors.white,
         primary: primary,
         secondary: const Color(0xFFC9B6E4),
-        surface: Colors.white, // کارت‌ها، AppBar و...
-        background: Colors.white, // مثل Dialog یا Dropdown
+        surface: Colors.white, // مثل Dialog یا Dropdown
         onPrimary: Colors.black87,
         onSecondary: Colors.black87,
         onSurface: Colors.black87,
-        onBackground: Colors.black87,
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: const Color(0xFFF1F1F6),
@@ -67,11 +65,9 @@ class AppTheme {
         primary: white,
         secondary: grey,
         surface: surfaceColor,
-        background: backgroundColor,
         onPrimary: white,
         onSecondary: grey,
         onSurface: white,
-        onBackground: white,
         error: Colors.redAccent,
         onError: white,
       ),
@@ -90,17 +86,17 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: surfaceColor,
         indicatorColor: white.withOpacity(0.08),
-        labelTextStyle: MaterialStateProperty.resolveWith((states) {
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
           return TextStyle(
-            color: states.contains(MaterialState.selected) ? white : grey,
-            fontWeight: states.contains(MaterialState.selected)
+            color: states.contains(WidgetState.selected) ? white : grey,
+            fontWeight: states.contains(WidgetState.selected)
                 ? FontWeight.bold
                 : FontWeight.normal,
           );
         }),
-        iconTheme: MaterialStateProperty.resolveWith((states) {
+        iconTheme: WidgetStateProperty.resolveWith((states) {
           return IconThemeData(
-            color: states.contains(MaterialState.selected) ? white : grey,
+            color: states.contains(WidgetState.selected) ? white : grey,
           );
         }),
       ),

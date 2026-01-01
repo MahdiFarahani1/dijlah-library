@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bookapp/config/version/version.dart';
 import 'package:bookapp/features/about/view/about_app_screen.dart';
 import 'package:bookapp/features/mainWrapper/view/navigaion.dart';
@@ -8,6 +10,7 @@ import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/shared/utils/esay_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,20 +31,28 @@ class CustomDrawer extends StatelessWidget {
                 children: [
                   const SizedBox(height: 40),
                   Image.asset(
-                    Assets.images.logoHeader.path,
+                    Assets.images.coAppHsLib.path,
                     height: 120,
                     width: 120,
-                    color: Theme.of(context).colorScheme.tertiary,
                   ),
                   const SizedBox(height: 8),
 
-                  const Divider(height: 32),
+                  Divider(
+                    color: Colors.grey.shade400,
+                  ),
                   _buildDrawerItem(
                       Assets.newicons.houseChimney.path, 'الرئيسية', () {
                     Navigator.pop(context);
                     MainWrapper.controllerNavBar.jumpToTab(0);
                   }),
-
+                  _buildDrawerItem(
+                      Assets.newicons.userLock.path, 'السيرة الذاتية',
+                      () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BioGraphy()));
+                  }),
                   _buildDrawerItem(
                       Assets.newicons.commentInfo.path, 'حول التطبيق', () {
                     Navigator.push(
@@ -59,15 +70,14 @@ class CustomDrawer extends StatelessWidget {
                         ));
                   }),
                   _buildDrawerItem(
-                      Assets.newicons.userLock.path, 'سياسية الخصوصية', () {
+                      Assets.newicons.userLock.path, 'سياسية الخصوصية',
+                      () async {
                     final Uri url = Uri.parse(
-                        'https://maarifadeen.com/privacy_policy_almaerifa.html');
+                        'https://al-hakim.com/privacy_alhakim_lib.html');
 
                     launchUrl(url);
                   }),
 
-                  EsaySize.gap(2), const Divider(),
-                  // اشتراک‌گذاری
                   ListTile(
                     leading: Assets.newicons.paperPlaneTop.image(
                       width: 18,
@@ -81,8 +91,13 @@ class CustomDrawer extends StatelessWidget {
                       color: Theme.of(context).textTheme.bodyLarge!.color,
                     ),
                     onTap: () {
-                      Share.share(
-                          'https://play.google.com/store/apps/details?id=com.dijlah.almarifaaldenyah');
+                      if (Platform.isAndroid) {
+                        Share.share(
+                            'https://play.google.com/store/apps/details?id=com.dijlah.library');
+                      } else if (Platform.isIOS) {
+                        Share.share(
+                            'https://apps.apple.com/us/app/دائرة-المعارف-الحسينية/id6755726642');
+                      }
                     },
                   ),
 
@@ -98,7 +113,7 @@ class CustomDrawer extends StatelessWidget {
                           trailing: Transform.scale(
                               scale: 0.77,
                               child: Switch(
-                                activeColor: Colors.black,
+                                activeThumbColor: Colors.black,
                                 inactiveTrackColor:
                                     Theme.of(context).primaryColor,
                                 inactiveThumbColor: Colors.white,
@@ -180,5 +195,27 @@ class CustomDrawer extends StatelessWidget {
         },
       );
     });
+  }
+}
+
+class BioGraphy extends StatelessWidget {
+  const BioGraphy({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('السيرة الذاتية'),
+      ),
+      body: InAppWebView(
+        initialFile: Assets.images.biography,
+        initialSettings: InAppWebViewSettings(
+          javaScriptEnabled: true,
+          transparentBackground: true,
+          supportZoom: false,
+        ),
+      ),
+    );
   }
 }

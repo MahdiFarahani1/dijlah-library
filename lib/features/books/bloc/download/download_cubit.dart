@@ -7,12 +7,13 @@ import 'package:bookapp/features/books/model/model_books.dart';
 import 'package:bookapp/features/books/widgets/file_downloader.dart';
 import 'package:bookapp/shared/func/folder_check.dart';
 import 'download_state.dart';
+import 'package:bookapp/config/storage/download_progress_storage.dart';
 
 class DownloadCubit extends Cubit<Map<String, DownloadState>> {
   DownloadCubit() : super({});
 
-  Future<void> checkIfDownloaded(String bookId, String pdf) async {
-    final fileName = pdf.split('/').last;
+  Future<void> checkIfDownloaded(String bookId) async {
+    final fileName = "$bookId.pdf";
     if (fileName.isEmpty) return;
 
     final dir = await getApplicationDocumentsDirectory();
@@ -26,19 +27,23 @@ class DownloadCubit extends Cubit<Map<String, DownloadState>> {
     String bookId,
   ) async {
     final base = await getBooksBaseDir();
-    final file = File('${base.path}/$bookId.zip');
+    final file = File('${base.path}/book_${bookId}_db.zip');
     final exists = await file.exists();
 
     _updateState(bookId, (s) => s.copyWith(isDownloadedBook: exists));
   }
 
   Future<void> startPdfDownload(String bookId, String url) async {
+    Directory baseDir = await getApplicationDocumentsDirectory();
+
+    String fullPath = '${baseDir.path}/$bookId.pdf';
     final key = bookId;
     _updateState(
         key, (s) => s.copyWith(isDownloadingPdf: true, progressPdf: 0));
 
     await FileDownloader.downloadFile(
       url: url,
+      customFullPath: fullPath,
       onProgress: (progress) =>
           _updateState(key, (s) => s.copyWith(progressPdf: progress)),
       onComplete: (_) => _updateState(
@@ -63,13 +68,12 @@ class DownloadCubit extends Cubit<Map<String, DownloadState>> {
     try {
       await FileDownloader.downloadFile(
         url: url,
-        fileName: '$bookId.zip',
         customDirectoryPath: (await getBooksBaseDir()).path,
         onProgress: (progress) {
           print('📊 Progress for $bookId: $progress%');
           _updateState(key, (s) => s.copyWith(progressBook: progress));
         },
-        onComplete: (filePath) {
+        onComplete: (filePath) async {
           print('✅ Download completed for $bookId');
           print('📁 File saved at: $filePath');
           _updateState(
@@ -80,6 +84,19 @@ class DownloadCubit extends Cubit<Map<String, DownloadState>> {
               isDownloadedBook: true,
             ),
           );
+
+          // [Fix] Update Download Progress
+          try {
+            final baseDir = await getBooksBaseDir();
+            final zipFiles = baseDir
+                .listSync()
+                .whereType<File>()
+                .where((f) => f.path.endsWith('.zip'))
+                .length;
+            DownloadProgressStorage.setDownloadedBooks(zipFiles);
+          } catch (e) {
+            print('⚠️ Failed to update progress: $e');
+          }
         },
       );
     } catch (e) {

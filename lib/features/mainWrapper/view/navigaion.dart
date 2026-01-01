@@ -1,11 +1,12 @@
-import 'package:bookapp/features/articles/view/articles_screen.dart';
+import 'package:bookapp/features/books/view/books_screen.dart';
+import 'package:bookapp/features/mainWrapper/repository/first_enter_bool.dart';
 import 'package:bookapp/features/mainWrapper/view/home_Page.dart';
 import 'package:bookapp/features/mainWrapper/bloc/navbar/navigation_cubit.dart';
-import 'package:bookapp/features/photo_gallery/view/photo_gallery_page.dart';
-import 'package:bookapp/features/questions/view/questions_category_screen.dart';
 import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
 import 'package:bookapp/features/settings/bloc/settings_state.dart';
 import 'package:bookapp/features/storage/view/storage_book_screen.dart';
+import 'package:bookapp/features/storage/view/storage_page_screen.dart';
+import 'package:bookapp/features/storage/view/storage_comment_screen.dart';
 import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/shared/scaffold/appbar.dart';
 import 'package:bookapp/shared/scaffold/draver.dart';
@@ -14,7 +15,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class MainWrapper extends StatelessWidget {
-  static final controllerNavBar = PersistentTabController();
+  static final controllerNavBar = PersistentTabController(
+      initialIndex: EnterStorageService().readFirstEnter() == true ? 0 : 1);
   const MainWrapper({
     super.key,
   });
@@ -31,10 +33,16 @@ class MainWrapper extends StatelessWidget {
             builder: (context, settingsState) {
               return PersistentTabView(
                 controller: controllerNavBar,
-                onTabChanged: (value) {
+                onTabChanged: (value) async {
                   BlocProvider.of<NavigationCubit>(context).setPage(value);
+                  final isEnter = EnterStorageService().readFirstEnter();
+
+                  if (!isEnter) {
+                    EnterStorageService().saveFirstEnter(true);
+                  }
                 },
                 tabs: [
+                  // 1) المكتبة
                   navItem(
                       context: context,
                       settingsState: settingsState,
@@ -46,6 +54,7 @@ class MainWrapper extends StatelessWidget {
                       iconPath: Assets.newicons.bookOpenCover.path,
                       title: 'المكتبة',
                       screen: HomePage()),
+                  // 2) تحميل
                   navItem(
                       context: context,
                       settingsState: settingsState,
@@ -54,20 +63,24 @@ class MainWrapper extends StatelessWidget {
                       itemColor: state == 1
                           ? Theme.of(context).primaryColor
                           : Theme.of(context).primaryColor.withOpacity(0.3),
-                      iconPath: Assets.newicons.article.path,
-                      title: 'المقالات',
-                      screen: ArticlesScreen()),
+                      iconPath: Assets.icons.upAndDownArrows.path,
+                      title: 'تحميل',
+                      screen: BooksScreen()),
+                  // 3) المفضلة (الكتب المحفوظة)
                   navItem(
                       context: context,
                       settingsState: settingsState,
+                      widthIcon: 20,
+                      heightIcon: 20,
                       itemColor: state == 2
                           ? Theme.of(context).primaryColor
                           : Theme.of(context).primaryColor.withOpacity(0.3),
-                      iconPath: Assets.newicons.messagesQuestion.path,
-                      widthIcon: 22,
-                      heightIcon: 22,
-                      title: 'الاسئلة',
-                      screen: QuestionsScreen()),
+                      iconPath: Assets.newicons.bookmark.path,
+                      title: 'المفضلة',
+                      screen: const StorageBookScreen(
+                        isBack: false,
+                      )),
+                  // 4) الاشارات (الصفحات المحفوظة)
                   navItem(
                       context: context,
                       settingsState: settingsState,
@@ -76,9 +89,12 @@ class MainWrapper extends StatelessWidget {
                       itemColor: state == 3
                           ? Theme.of(context).primaryColor
                           : Theme.of(context).primaryColor.withOpacity(0.3),
-                      iconPath: Assets.newicons.images.path,
-                      title: 'الصور',
-                      screen: PhotoGalleryPage()),
+                      iconPath: Assets.newicons.circleBookmark.path,
+                      title: 'الاشارات',
+                      screen: const StoragePageScreen(
+                        isBack: false,
+                      )),
+                  // 5) التعليقات
                   navItem(
                       context: context,
                       settingsState: settingsState,
@@ -87,9 +103,9 @@ class MainWrapper extends StatelessWidget {
                       itemColor: state == 4
                           ? Theme.of(context).primaryColor
                           : Theme.of(context).primaryColor.withOpacity(0.3),
-                      iconPath: Assets.newicons.bookmark.path,
-                      title: 'المفضلة',
-                      screen: StorageBookScreen(
+                      iconPath: Assets.newicons.commentAltDots.path,
+                      title: 'التعليقات',
+                      screen: const CommentScreen(
                         isBack: false,
                       )),
                 ],

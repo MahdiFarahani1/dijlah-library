@@ -31,7 +31,7 @@ Future<Directory> getBooksBaseDir() async {
 
 Future<String> getBookZipPath(String bookId) async {
   final base = await getBooksBaseDir();
-  return p.join(base.path, '$bookId.zip');
+  return p.join(base.path, 'book_${bookId}_db.zip');
 }
 
 Future<Directory> getBookTmpDir(String bookId) async {
