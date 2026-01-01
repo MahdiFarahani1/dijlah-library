@@ -5,11 +5,13 @@ import 'dart:typed_data';
 // import removed: books_screen.dart (unused)
 import 'package:bookapp/features/books/bloc/downloaded_page/downloaded_page_cubit.dart';
 import 'package:bookapp/features/books/bloc/downloaded_page/downloaded_page_state.dart';
+import 'package:bookapp/features/books/model/book_item_model.dart';
 import 'package:bookapp/features/content_books/view/content_page.dart';
 import 'package:bookapp/features/mainWrapper/bloc/slider/slider_cubit.dart';
 import 'package:bookapp/features/mainWrapper/view/all_readingbook.dart';
 // import removed: bookitem.dart (unused)
 import 'package:bookapp/features/mainWrapper/widget/empty_reading.dart';
+import 'package:bookapp/features/mainWrapper/widget/random_book.dart';
 import 'package:bookapp/features/reading_progress/bloc/cubit/readingbook_cubit.dart';
 import 'package:bookapp/features/search/view/search_screen.dart';
 import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
@@ -171,7 +173,6 @@ class _HomePageState extends State<HomePage> {
                             .fadeIn(duration: 600.ms)
                             .slideY(begin: -0.2, end: 0),
                         const SizedBox(height: 15.0),
-
                         // 🖼️ Image Slider
                         BlocBuilder<SliderCubit, SliderState>(
                           builder: (context, state) {
@@ -591,9 +592,18 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         const SizedBox(height: 20.0),
-
                         // 📚 Downloaded Books Section (instant refresh on complete)
+                        BlocSelector<DownloadedBooksCubit, DownloadedBooksState,
+                            BookItem?>(
+                          selector: (state) => state.randomBook,
+                          builder: (context, book) {
+                            if (book == null) {
+                              return const SizedBox.shrink();
+                            }
 
+                            return RandomBookCard(book: book);
+                          },
+                        ),
                         BlocBuilder<DownloadedBooksCubit, DownloadedBooksState>(
                           builder: (context, state) {
                             if (state.categoryStatus

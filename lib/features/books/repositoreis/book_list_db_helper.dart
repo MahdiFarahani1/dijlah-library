@@ -80,6 +80,8 @@ class BookListDbHelper {
             'writer': book.writerName,
             'img': book.photoUrl,
             'description': book.description ?? '',
+            'page_number': book.numberPages,
+            'category_name': book.category.title ?? 'null',
           },
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
@@ -99,6 +101,8 @@ class BookListDbHelper {
         'writer': book.writerName,
         'img': book.photoUrl,
         'description': book.description ?? '',
+        'page_number': book.numberPages,
+        'category_name': book.category.title ?? 'null',
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -133,9 +137,12 @@ class BookListDbHelper {
         epubLink: '',
         soundUrl: '',
         scholarName: '',
-        numberPages: 0,
+        numberPages: e['page_number'],
         category: CategoryModel(
-            id: e['gid'] as int? ?? 0, title: '', slug: '', booksCount: 0),
+            id: e['gid'] as int? ?? 0,
+            title: e['title'] ?? '',
+            slug: '',
+            booksCount: 0),
       );
     }).toList();
   }

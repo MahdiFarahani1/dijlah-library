@@ -4,6 +4,7 @@ import 'package:bookapp/features/books/model/model_books.dart';
 class DownloadedBooksState {
   final DownloadedBooksStatus booksStatus;
   final DownloadedCategotyStatus categoryStatus;
+  BookItem? randomBook;
   int itemPerCount;
   List<BookItem> visableList;
   bool isLoading;
@@ -13,6 +14,7 @@ class DownloadedBooksState {
     this.itemPerCount = 9,
     this.visableList = const [],
     this.isLoading = false,
+    this.randomBook,
   });
 
   factory DownloadedBooksState.initial() => DownloadedBooksState(
@@ -26,14 +28,15 @@ class DownloadedBooksState {
     int? itemPerCount,
     List<BookItem>? visableList,
     bool? isLoading,
+    BookItem? randomBook,
   }) {
     return DownloadedBooksState(
-      booksStatus: booksStatus ?? this.booksStatus,
-      categoryStatus: categoryStatus ?? this.categoryStatus,
-      itemPerCount: itemPerCount ?? this.itemPerCount,
-      visableList: visableList ?? this.visableList,
-      isLoading: isLoading ?? this.isLoading,
-    );
+        booksStatus: booksStatus ?? this.booksStatus,
+        categoryStatus: categoryStatus ?? this.categoryStatus,
+        itemPerCount: itemPerCount ?? this.itemPerCount,
+        visableList: visableList ?? this.visableList,
+        isLoading: isLoading ?? this.isLoading,
+        randomBook: randomBook ?? this.randomBook);
   }
 }
 

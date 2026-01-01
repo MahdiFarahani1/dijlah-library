@@ -28,6 +28,8 @@ class _FancyStickyHeaderState extends State<FancyStickyHeader>
   void initState() {
     super.initState();
     widget.scrollController.addListener(() {
+      if (!mounted) return;
+
       if (widget.scrollController.offset > 50 && !_collapsed) {
         setState(() => _collapsed = true);
       } else if (widget.scrollController.offset <= 50 && _collapsed) {

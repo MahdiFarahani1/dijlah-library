@@ -59,10 +59,6 @@ class BookRepository {
         headers: {'x-api-key': ConstantApp.apiKey},
       );
 
-      print('🟡 [DEBUG] Status Code: ${res.statusCode}');
-      print(
-          '🟡 [DEBUG] Raw Response: ${res.body.substring(0, 200)}...'); // فقط ۲۰۰ کاراکتر اول
-
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         print('✅ [API] Successfully parsed response');

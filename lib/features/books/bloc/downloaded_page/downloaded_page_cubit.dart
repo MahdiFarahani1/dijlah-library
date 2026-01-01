@@ -14,6 +14,8 @@ import 'package:bookapp/features/books/bloc/download/download_cubit.dart'; // [N
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'dart:math';
+
 class DownloadedBooksCubit extends Cubit<DownloadedBooksState> {
   DownloadedBooksCubit() : super(DownloadedBooksState.initial());
 
@@ -212,6 +214,8 @@ class DownloadedBooksCubit extends Cubit<DownloadedBooksState> {
           // مرحله ۷: افزودن به لیست نهایی
           final imageBytes = imageFile.content as List<int>;
           localBooks.add(BookItem(
+            category: bookInfo.category.title,
+            pageNumbers: bookInfo.numberPages,
             id: id,
             imageData: imageBytes,
             title: bookInfo.title,
@@ -226,7 +230,14 @@ class DownloadedBooksCubit extends Cubit<DownloadedBooksState> {
           continue;
         }
       }
+      final random = Random();
+      final randomBook = localBooks.isNotEmpty
+          ? localBooks[random.nextInt(localBooks.length)]
+          : null;
+
       final reversedBooks = localBooks.reversed.toList();
+
+      emit(state.copyWith(randomBook: randomBook));
 
       print(
           '\n📊 [Result] ${reversedBooks.length} valid books found for category $categoryId');
