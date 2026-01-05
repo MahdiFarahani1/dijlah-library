@@ -119,8 +119,10 @@ class DownloadedBooksCubit extends Cubit<DownloadedBooksState> {
         final hasAnyData = await BookListDbHelper.hasData();
         if (!hasAnyData) {
           emit(state.copyWith(
-              booksStatus: DownloadedBooksError(
-                  "برای دریافت لیست اولیه کتاب‌ها اتصال اینترنت لازم است.")));
+            booksStatus: const DownloadedBooksLoaded([]),
+            visableList: const [],
+            randomBook: null,
+          ));
           return;
         }
         // اگر دیتای کلی هست ولی این کتگوری خالیه، مشکلی نیست، ادامه میدیم (شاید دانلود شده‌ای نباشه)
@@ -155,8 +157,6 @@ class DownloadedBooksCubit extends Cubit<DownloadedBooksState> {
 
       final List<BookItem> localBooks = [];
       print('lenght zip files: ${zipFiles.length}');
-
-      DownloadProgressStorage.setDownloadedBooks(zipFiles.length);
 
       context.read<DowProgressBooksCubit>().updateProgress();
       // مرحله ۵: حلقه روی فایل‌ها

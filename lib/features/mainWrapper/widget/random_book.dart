@@ -17,7 +17,7 @@ class _RandomBookCardState extends State<RandomBookCard> {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

@@ -46,4 +46,18 @@ class SliderRepository {
       throw Exception("خطا در دریافت pagessssssss");
     }
   }
+
+  static Future<List<Company>> fetchCompanies() async {
+    final response = await http
+        .get(Uri.parse(apiUrl), headers: {'x-api-key': ConstantApp.apiKey});
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List companiesJson = data['companies'];
+
+      return companiesJson.map((json) => Company.fromJson(json)).toList();
+    } else {
+      throw Exception("خطا در دریافت companiesssssss");
+    }
+  }
 }

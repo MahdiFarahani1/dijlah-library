@@ -85,18 +85,8 @@ class DownloadCubit extends Cubit<Map<String, DownloadState>> {
             ),
           );
 
-          // [Fix] Update Download Progress
-          try {
-            final baseDir = await getBooksBaseDir();
-            final zipFiles = baseDir
-                .listSync()
-                .whereType<File>()
-                .where((f) => f.path.endsWith('.zip'))
-                .length;
-            DownloadProgressStorage.setDownloadedBooks(zipFiles);
-          } catch (e) {
-            print('⚠️ Failed to update progress: $e');
-          }
+          final current = DownloadProgressStorage.getDownloadedBooks();
+          DownloadProgressStorage.setDownloadedBooks(current + 1);
         },
       );
     } catch (e) {

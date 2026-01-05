@@ -2,11 +2,12 @@ class HomeModel {
   final List<SliderModel> sliders;
   final List<LastBookModel> lastBooks;
   final List<PageModel> pageModel;
-
+  final List<Company> companies;
   HomeModel(
       {required this.sliders,
       required this.lastBooks,
-      required this.pageModel});
+      required this.pageModel,
+      required this.companies});
 
   factory HomeModel.fromJson(Map<String, dynamic> json) {
     return HomeModel(
@@ -18,6 +19,9 @@ class HomeModel {
           .toList(),
       pageModel: (json['pages'] as List<dynamic>)
           .map((item) => PageModel.fromJson(item))
+          .toList(),
+      companies: (json['companies'] as List<dynamic>)
+          .map((item) => Company.fromJson(item))
           .toList(),
     );
   }
@@ -110,6 +114,56 @@ class PageModel {
       content: json['content'] as String,
       showCounter: json['show_counter'] as int,
       slug: json['slug'] as String,
+    );
+  }
+}
+
+class Company {
+  final int? id;
+  final String? title;
+  final String? companyDomain;
+  final String? img;
+  final String? description;
+  final String? apiToken;
+  final String? payload;
+  final String? primaryColor;
+  final String? secondaryColor;
+  final bool? active;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final String? photoUrl;
+
+  Company({
+    required this.id,
+    required this.title,
+    required this.companyDomain,
+    required this.img,
+    required this.description,
+    required this.apiToken,
+    required this.payload,
+    required this.primaryColor,
+    required this.secondaryColor,
+    required this.active,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.photoUrl,
+  });
+
+  factory Company.fromJson(Map<String, dynamic> json) {
+    return Company(
+      id: json['id'],
+      title: json['title'],
+      companyDomain: json['company_domain'],
+      img: json['img'],
+      description: json['description'],
+      apiToken: json['api_token'],
+      payload: json['payload'],
+      primaryColor: json['primary_color'],
+      secondaryColor: json['secondary_color'],
+      active: json['active'] == 1,
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+      photoUrl: json['photo_url'],
     );
   }
 }

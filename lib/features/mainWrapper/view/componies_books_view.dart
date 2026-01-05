@@ -23,8 +23,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-class BooksScreen extends StatelessWidget {
-  const BooksScreen({super.key});
+class ComponiesBooksView extends StatelessWidget {
+  final String apiKey;
+  const ComponiesBooksView({super.key, required this.apiKey});
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +38,7 @@ class BooksScreen extends StatelessWidget {
         BlocProvider(
           create: (context) => BookCubit(context.read<BookRepository>())
             ..loadBooks(
-              componyMode: false,
-            ), // [Sync] Pass dependency
+                componyMode: true, apiKey: apiKey), // [Sync] Pass dependency
         ),
       ],
       child: Scaffold(
@@ -94,8 +94,9 @@ class BooksScreen extends StatelessWidget {
               } else if (state is BookError) {
                 return Center(
                   child: ApiErrorWidget(
-                    onRetry: () =>
-                        context.read<BookCubit>().loadBooks(componyMode: false),
+                    onRetry: () => context
+                        .read<BookCubit>()
+                        .loadBooks(componyMode: true, apiKey: apiKey),
                   ),
                 );
               } else if (state is BookLoaded) {

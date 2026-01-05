@@ -13,10 +13,12 @@ class BookCubit extends Cubit<BookState> {
   BookCubit(this.repo) : super(BookInitial());
 
   // فقط از API می‌خونه
-  Future<void> loadBooks() async {
+  Future<void> loadBooks({required bool componyMode, String? apiKey}) async {
     emit(BookLoading());
     try {
-      final response = await repo.fetchLibrary();
+      final response = !componyMode
+          ? await repo.fetchLibrary()
+          : await repo.fetchCompaniesBooks(apiKey!);
 
       if (response != null && response.books.isNotEmpty) {
         _allBooks = response.books;

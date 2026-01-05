@@ -147,7 +147,7 @@ class _BookGroupsPageState extends State<BookGroupsPage> {
                         const Icon(Icons.error_outline,
                             size: 64, color: Colors.red),
                         const SizedBox(height: 16),
-                        const Text('خطا در بارگذاری گروه‌ها'),
+                        const Text("خطأ في تحميل المجموعات"),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => setState(() {}),
@@ -166,7 +166,7 @@ class _BookGroupsPageState extends State<BookGroupsPage> {
                         Icon(Icons.library_books_outlined,
                             size: 64, color: Colors.grey),
                         SizedBox(height: 16),
-                        Text('هیچ گروهی یافت نشد',
+                        Text("لم يتم العثور على أي مجموعة",
                             style: TextStyle(color: Colors.grey)),
                       ],
                     ),

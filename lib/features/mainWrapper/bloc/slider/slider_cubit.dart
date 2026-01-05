@@ -7,6 +7,7 @@ part 'slider_state.dart';
 class SliderCubit extends Cubit<SliderState> {
   SliderCubit()
       : super(SliderState(
+            statusCompanies: CompaniesLoading(),
             currentIndex: 0,
             statusSlider: SliderLoading(),
             statusPages: PagesLoading()));
@@ -42,5 +43,20 @@ class SliderCubit extends Cubit<SliderState> {
 
   indicatorChanged(int index) {
     emit(state.copyWith(currentIndex: index));
+  }
+
+  Future<void> loadCompaniesApi() async {
+    try {
+      emit(state.copyWith(statusCompanies: CompaniesLoading()));
+      final companies = await SliderRepository.fetchCompanies();
+
+      emit(state.copyWith(
+          statusCompanies: CompaniesLoaded(
+        companies: companies,
+      )));
+    } catch (e) {
+      emit(state.copyWith(statusCompanies: CompaniesError(e.toString())));
+      print(e.toString());
+    }
   }
 }

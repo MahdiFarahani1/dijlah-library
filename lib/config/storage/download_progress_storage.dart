@@ -29,7 +29,9 @@ class DownloadProgressStorage {
   /// درصد دانلود شده
   static double getProgress() {
     final total = getTotalBooks();
+    final downloaded = getDownloadedBooks();
     if (total == 0) return 0;
-    return getDownloadedBooks() / total;
+
+    return (downloaded / total).clamp(0.0, 1.0);
   }
 }

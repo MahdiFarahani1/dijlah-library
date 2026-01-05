@@ -3,18 +3,21 @@ part of 'slider_cubit.dart';
 class SliderState {
   StatusSlider statusSlider;
   StatusPages statusPages;
-
+  StatusCompanies statusCompanies;
   int currentIndex;
 
   SliderState(
       {required this.currentIndex,
       required this.statusSlider,
-      required this.statusPages});
+      required this.statusPages,
+      required this.statusCompanies});
   SliderState copyWith(
       {StatusSlider? statusSlider,
       int? currentIndex,
-      StatusPages? statusPages}) {
+      StatusPages? statusPages,
+      StatusCompanies? statusCompanies}) {
     return SliderState(
+        statusCompanies: statusCompanies ?? this.statusCompanies,
         currentIndex: currentIndex ?? this.currentIndex,
         statusSlider: statusSlider ?? this.statusSlider,
         statusPages: statusPages ?? this.statusPages);
@@ -55,4 +58,22 @@ class PagesError extends StatusPages {
   final String message;
 
   PagesError(this.message);
+}
+
+abstract class StatusCompanies {}
+
+class CompaniesLoading extends StatusCompanies {}
+
+class CompaniesLoaded extends StatusCompanies {
+  final List<Company> companies;
+
+  CompaniesLoaded({
+    required this.companies,
+  });
+}
+
+class CompaniesError extends StatusCompanies {
+  final String message;
+
+  CompaniesError(this.message);
 }

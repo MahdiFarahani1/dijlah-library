@@ -74,14 +74,30 @@ class BookRepository {
     }
   }
 
-  // Keeping original fetchBooks for compatibility or simple listing if needed,
-  // but logically we should switch to fetchLibrary.
-  // Let's deprecate or alias it if unrelated code uses it.
-  // But for this task, I'll add fetchLibrary.
-  Future<List<BookModel>> fetchBooks() async {
-    // Legacy support or direct fetch
-    final lib = await fetchLibrary();
-    return lib?.books ?? [];
+  Future<LibraryResponse?> fetchCompaniesBooks(String apiKey) async {
+    try {
+      Uri uri = Uri.parse(ConstantApp.booksAPi);
+
+      print('🌐 [API CALL] URL: $uri');
+
+      final res = await http.get(
+        uri,
+        headers: {'x-api-key': apiKey},
+      );
+
+      if (res.statusCode == 200) {
+        final data = json.decode(res.body);
+        print('✅ [API] Successfully parsed response');
+        return LibraryResponse.fromJson(data);
+      } else {
+        print('❌ [API] Error: ${res.statusCode}');
+        throw Exception('API error: ${res.statusCode}');
+      }
+    } catch (e, s) {
+      print('🔥 [EXCEPTION] fetchLibrary: $e');
+      print('📜 [STACKTRACE] $s');
+      rethrow;
+    }
   }
 
   Future<List<BookModel>> fetchBooksByCategoriesId(int catId) async {

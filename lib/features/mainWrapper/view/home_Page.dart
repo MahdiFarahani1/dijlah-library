@@ -8,7 +8,9 @@ import 'package:bookapp/features/books/bloc/downloaded_page/downloaded_page_stat
 import 'package:bookapp/features/books/model/book_item_model.dart';
 import 'package:bookapp/features/content_books/view/content_page.dart';
 import 'package:bookapp/features/mainWrapper/bloc/slider/slider_cubit.dart';
+import 'package:bookapp/features/mainWrapper/model/slider_model.dart';
 import 'package:bookapp/features/mainWrapper/view/all_readingbook.dart';
+import 'package:bookapp/features/mainWrapper/view/componies_books_view.dart';
 // import removed: bookitem.dart (unused)
 import 'package:bookapp/features/mainWrapper/widget/empty_reading.dart';
 import 'package:bookapp/features/mainWrapper/widget/random_book.dart';
@@ -61,8 +63,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<SliderCubit>().loadHomeApi();
-    context.read<SliderCubit>().loadHomeApi();
-
+    context.read<SliderCubit>().loadPagesApi();
+    context.read<SliderCubit>().loadCompaniesApi();
     context.read<ReadingbookCubit>().getReadingDataFromDb();
     context.read<DownloadedBooksCubit>().loadCategoryBooks();
 
@@ -108,6 +110,7 @@ class _HomePageState extends State<HomePage> {
           onRefresh: () async {
             await context.read<SliderCubit>().loadHomeApi();
             await context.read<SliderCubit>().loadPagesApi();
+            await context.read<SliderCubit>().loadCompaniesApi();
 
             await context.read<DownloadedBooksCubit>().loadCategoryBooks();
             await context
@@ -126,8 +129,15 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 📌 Sticky Header
-                        SizedBox(
-                          height: 85,
+                        BlocBuilder<ConnectionCubit, ConnectionStat>(
+                          builder: (context, state) {
+                            if (state.status == ConnectionStatus.offline) {
+                              return SizedBox.shrink();
+                            }
+                            return SizedBox(
+                              height: 85,
+                            );
+                          },
                         ),
                         // 🔍 Search Bar
                         Padding(
@@ -592,7 +602,9 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         const SizedBox(height: 20.0),
-                        // 📚 Downloaded Books Section (instant refresh on complete)
+                        // 📚 Downloaded Books Section
+                        // (instant refresh on complete)
+
                         BlocSelector<DownloadedBooksCubit, DownloadedBooksState,
                             BookItem?>(
                           selector: (state) => state.randomBook,
@@ -601,9 +613,133 @@ class _HomePageState extends State<HomePage> {
                               return const SizedBox.shrink();
                             }
 
-                            return RandomBookCard(book: book);
+                            return Column(
+                              children: [
+                                HeaderTile(context, 'الكتب المقروءة'),
+                                RandomBookCard(book: book),
+                              ],
+                            );
                           },
                         ),
+
+                        BlocSelector<SliderCubit, SliderState, StatusCompanies>(
+                          selector: (state) => state.statusCompanies,
+                          builder: (context, companies) {
+                            if (companies is CompaniesLoading) {
+                              return Center(
+                                  child: CustomLoading.loadLine(context));
+                            }
+
+                            if (companies is CompaniesLoaded) {
+                              final companiesData = (companies).companies;
+
+                              return Column(
+                                children: [
+                                  HeaderTile(context, 'مواضيع مقترحة'),
+                                  SizedBox(
+                                    height: EsaySize.height(context) * 0.1,
+                                    child: ListView.separated(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: companiesData.length,
+                                      separatorBuilder: (_, __) =>
+                                          const SizedBox(width: 12),
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            // TODO: action
+                                          },
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ComponiesBooksView(
+                                                      apiKey:
+                                                          companiesData[index]
+                                                              .apiToken!,
+                                                    ),
+                                                  ));
+                                            },
+                                            child: Container(
+                                              width: 130,
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .surface,
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.06),
+                                                    blurRadius: 10,
+                                                    offset: const Offset(0, 4),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  // Icon
+                                                  Container(
+                                                    width: 36,
+                                                    height: 36,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary
+                                                          .withOpacity(0.15),
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.menu_book_rounded,
+                                                      size: 18,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Divider(),
+                                                  // Title
+                                                  Expanded(
+                                                    child: Text(
+                                                      companiesData[index]
+                                                          .title!,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                                  .animate()
+                                  .fade(duration: 1000.ms)
+                                  .moveX(duration: 1000.ms);
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                        const SizedBox(height: 25.0),
+
                         BlocBuilder<DownloadedBooksCubit, DownloadedBooksState>(
                           builder: (context, state) {
                             if (state.categoryStatus
@@ -781,6 +917,7 @@ class _HomePageState extends State<HomePage> {
                         ),
 
                         const SizedBox(height: 25.0),
+
                         BlocListener<DownloadCubit, Map<String, DownloadState>>(
                           // Only trigger when a book's downloaded flag flips to true
                           listenWhen: (previous, current) {
@@ -828,12 +965,15 @@ class _HomePageState extends State<HomePage> {
                                 previous.booksStatus != current.booksStatus,
                             builder: (context, state) {
                               if (state.booksStatus is DownloadedBooksError) {
+                                final String error =
+                                    (state.booksStatus as DownloadedBooksError)
+                                        .message;
                                 return Center(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        'حدث خطأ في الخادم، الرجاء المحاولة مرة أخرى',
+                                        error,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.red.shade700,
@@ -1104,7 +1244,8 @@ class _HomePageState extends State<HomePage> {
                                               context),
                                         );
                                       },
-                                    )
+                                    ),
+                                    EsaySize.gap(30),
                                   ],
                                 );
                               }
@@ -1141,6 +1282,38 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget HeaderTile(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 🔹 Section Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 3.5,
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }
