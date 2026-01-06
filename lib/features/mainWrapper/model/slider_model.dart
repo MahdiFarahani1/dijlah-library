@@ -121,49 +121,31 @@ class PageModel {
 class Company {
   final int? id;
   final String? title;
-  final String? companyDomain;
-  final String? img;
-  final String? description;
   final String? apiToken;
-  final String? payload;
-  final String? primaryColor;
-  final String? secondaryColor;
-  final bool? active;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String? companyDomain;
+  final String? description;
+  final int? booksCount;
   final String? photoUrl;
 
   Company({
     required this.id,
     required this.title,
-    required this.companyDomain,
-    required this.img,
-    required this.description,
     required this.apiToken,
-    required this.payload,
-    required this.primaryColor,
-    required this.secondaryColor,
-    required this.active,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.companyDomain,
+    required this.description,
+    required this.booksCount,
     required this.photoUrl,
   });
 
   factory Company.fromJson(Map<String, dynamic> json) {
     return Company(
-      id: json['id'],
-      title: json['title'],
-      companyDomain: json['company_domain'],
-      img: json['img'],
-      description: json['description'],
-      apiToken: json['api_token'],
-      payload: json['payload'],
-      primaryColor: json['primary_color'],
-      secondaryColor: json['secondary_color'],
-      active: json['active'] == 1,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      photoUrl: json['photo_url'],
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
+      apiToken: json['api_token'] ?? '',
+      companyDomain: json['company_domain'] ?? '',
+      description: json['description'] ?? '',
+      booksCount: json['books_count'] ?? 0,
+      photoUrl: json['photo_url'] ?? '',
     );
   }
 }

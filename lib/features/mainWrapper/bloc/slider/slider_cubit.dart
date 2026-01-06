@@ -7,56 +7,56 @@ part 'slider_state.dart';
 class SliderCubit extends Cubit<SliderState> {
   SliderCubit()
       : super(SliderState(
-            statusCompanies: CompaniesLoading(),
-            currentIndex: 0,
-            statusSlider: SliderLoading(),
-            statusPages: PagesLoading()));
+          statusSlider: SliderLoading(),
+          statusPages: PagesLoading(),
+          statusCompanies: CompaniesLoading(),
+          currentIndex: 0,
+        ));
 
-  Future<void> loadHomeApi() async {
+  Future<void> loadHomeData() async {
+    // 1. همه وضعیت‌ها رو Loading کن
+    emit(state.copyWith(
+      statusSlider: SliderLoading(),
+      statusPages: PagesLoading(),
+      statusCompanies: CompaniesLoading(),
+    ));
+
     try {
-      emit(state.copyWith(statusSlider: SliderLoading()));
-      final sliders = await SliderRepository.fetchSliders();
+      // 2. JSON خام از Repository
+      final data = await SliderRepository.fetchHomeJson();
 
+      // 3. ساخت مدل‌ها اینجا
+      final sliders = (data['sliders'] as List)
+          .map((json) => SliderModel.fromJson(json))
+          .toList();
+
+      final pages = (data['pages'] as List)
+          .map((json) => PageModel.fromJson(json))
+          .toList();
+
+      final companies = (data['companies'] as List)
+          .map((json) => Company.fromJson(json))
+          .toList();
+
+      // 4. Emit وضعیت Loaded با مدل‌ها
       emit(state.copyWith(
-          statusSlider: SliderLoaded(
-        sliders: sliders,
-      )));
+        statusSlider: SliderLoaded(sliders: sliders),
+        statusPages: PagesLoaded(pages: pages),
+        statusCompanies: CompaniesLoaded(companies: companies),
+      ));
+      print('api loadedddddddd');
     } catch (e) {
-      emit(state.copyWith(statusSlider: SliderError(e.toString())));
-    }
-  }
-
-  Future<void> loadPagesApi() async {
-    try {
-      emit(state.copyWith(statusPages: PagesLoading()));
-      final pages = await SliderRepository.fetchPages();
-
+      // همه وضعیت‌ها رو Error کن
       emit(state.copyWith(
-          statusPages: PagesLoaded(
-        pages: pages,
-      )));
-    } catch (e) {
-      emit(state.copyWith(statusPages: PagesError(e.toString())));
+        statusSlider: SliderError(e.toString()),
+        statusPages: PagesError(e.toString()),
+        statusCompanies: CompaniesError(e.toString()),
+      ));
       print(e.toString());
     }
   }
 
-  indicatorChanged(int index) {
+  void indicatorChanged(int index) {
     emit(state.copyWith(currentIndex: index));
-  }
-
-  Future<void> loadCompaniesApi() async {
-    try {
-      emit(state.copyWith(statusCompanies: CompaniesLoading()));
-      final companies = await SliderRepository.fetchCompanies();
-
-      emit(state.copyWith(
-          statusCompanies: CompaniesLoaded(
-        companies: companies,
-      )));
-    } catch (e) {
-      emit(state.copyWith(statusCompanies: CompaniesError(e.toString())));
-      print(e.toString());
-    }
   }
 }

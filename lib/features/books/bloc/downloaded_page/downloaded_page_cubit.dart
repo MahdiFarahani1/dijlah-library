@@ -75,6 +75,8 @@ class DownloadedBooksCubit extends Cubit<DownloadedBooksState> {
               await BookRepository().fetchLibrary(lastUpdate: localUpdate);
 
           if (response != null) {
+            DownloadProgressStorage.setTotalBooks(response.books.length);
+
             if (response.lastUpdate != localUpdate &&
                 response.lastUpdate.isNotEmpty) {
               print(
@@ -125,18 +127,11 @@ class DownloadedBooksCubit extends Cubit<DownloadedBooksState> {
           ));
           return;
         }
-        // اگر دیتای کلی هست ولی این کتگوری خالیه، مشکلی نیست، ادامه میدیم (شاید دانلود شده‌ای نباشه)
       }
 
       print(
           '📚 [Cubit] Using ${categoryBooks.length} books from local DB/Cache for processing zips');
 
-      // [Progress] Update total books count (accurate after sync)
-      if (categoryId == null) {
-        DownloadProgressStorage.setTotalBooks(categoryBooks.length);
-      }
-
-      // مرحله ۳: مسیر فایل‌های ذخیره‌شده
       final baseDir = await getBooksBaseDir();
       print('📁 [Path] Books directory: ${baseDir.path}');
 

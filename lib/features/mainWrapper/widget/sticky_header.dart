@@ -1,8 +1,10 @@
 import 'package:bookapp/features/mainWrapper/model/slider_model.dart';
 import 'package:bookapp/features/mainWrapper/widget/header_content.dart';
+import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
 import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FancyStickyHeader extends StatefulWidget {
   final ScrollController scrollController;
@@ -40,8 +42,10 @@ class _FancyStickyHeaderState extends State<FancyStickyHeader>
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<SettingsCubit>().state;
     return Container(
-      color: Colors.white,
+      color:
+          state.darkMode ? const Color.fromARGB(255, 27, 27, 27) : Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

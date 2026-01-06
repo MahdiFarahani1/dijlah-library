@@ -11,9 +11,11 @@ import 'package:bookapp/features/mainWrapper/bloc/slider/slider_cubit.dart';
 import 'package:bookapp/features/mainWrapper/model/slider_model.dart';
 import 'package:bookapp/features/mainWrapper/view/all_readingbook.dart';
 import 'package:bookapp/features/mainWrapper/view/componies_books_view.dart';
+import 'package:bookapp/features/mainWrapper/widget/dialog_componies.dart';
 // import removed: bookitem.dart (unused)
 import 'package:bookapp/features/mainWrapper/widget/empty_reading.dart';
 import 'package:bookapp/features/mainWrapper/widget/random_book.dart';
+import 'package:bookapp/features/mainWrapper/widget/shimmer_home.dart';
 import 'package:bookapp/features/reading_progress/bloc/cubit/readingbook_cubit.dart';
 import 'package:bookapp/features/search/view/search_screen.dart';
 import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
@@ -24,6 +26,7 @@ import 'package:bookapp/features/settings/bloc/settings_state.dart';
 import 'package:bookapp/shared/func/launchURL.dart';
 // imports removed: storage_comment_screen.dart, storage_page_screen.dart (unused)
 import 'package:bookapp/gen/assets.gen.dart';
+import 'package:bookapp/shared/ui_helper/dialog_common.dart';
 import 'package:bookapp/shared/ui_helper/snackbar_common.dart';
 import 'package:bookapp/shared/utils/esay_size.dart';
 // import removed: launchURL.dart (unused)
@@ -62,9 +65,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<SliderCubit>().loadHomeApi();
-    context.read<SliderCubit>().loadPagesApi();
-    context.read<SliderCubit>().loadCompaniesApi();
+    context.read<SliderCubit>().loadHomeData();
+
     context.read<ReadingbookCubit>().getReadingDataFromDb();
     context.read<DownloadedBooksCubit>().loadCategoryBooks();
 
@@ -95,7 +97,7 @@ class _HomePageState extends State<HomePage> {
             current.status == ConnectionStatus.online,
         listener: (context, state) {
           print('🌐 [Home] Connection restored. Refreshing data...');
-          context.read<SliderCubit>().loadHomeApi();
+          context.read<SliderCubit>().loadHomeData();
           // Reload downloaded books (will trigger sync)
           context
               .read<DownloadedBooksCubit>()
@@ -108,9 +110,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: RefreshIndicator(
           onRefresh: () async {
-            await context.read<SliderCubit>().loadHomeApi();
-            await context.read<SliderCubit>().loadPagesApi();
-            await context.read<SliderCubit>().loadCompaniesApi();
+            await context.read<SliderCubit>().loadHomeData();
 
             await context.read<DownloadedBooksCubit>().loadCategoryBooks();
             await context
@@ -189,8 +189,7 @@ class _HomePageState extends State<HomePage> {
                             if (state.statusSlider is SliderLoading) {
                               return SizedBox(
                                 height: 160,
-                                child: Center(
-                                    child: CustomLoading.fadingCircle(context)),
+                                child: Center(child: SliderShimmer()),
                               );
                             } else if (state.statusSlider is SliderLoaded) {
                               final sliders =
@@ -322,9 +321,7 @@ class _HomePageState extends State<HomePage> {
                         BlocBuilder<ReadingbookCubit, ReadingbookState>(
                           builder: (context, state) {
                             if (state.status == ReadingbookStatus.loading) {
-                              return Center(
-                                child: CustomLoading.fadingCircle(context),
-                              );
+                              return const ReadingBooksShimmer();
                             }
 
                             if (state.status == ReadingbookStatus.error) {
@@ -626,8 +623,7 @@ class _HomePageState extends State<HomePage> {
                           selector: (state) => state.statusCompanies,
                           builder: (context, companies) {
                             if (companies is CompaniesLoading) {
-                              return Center(
-                                  child: CustomLoading.loadLine(context));
+                              return const CompaniesShimmerAnimated();
                             }
 
                             if (companies is CompaniesLoaded) {
@@ -637,7 +633,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   HeaderTile(context, 'مواضيع مقترحة'),
                                   SizedBox(
-                                    height: EsaySize.height(context) * 0.1,
+                                    height: 130,
                                     child: ListView.separated(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16),
@@ -646,83 +642,124 @@ class _HomePageState extends State<HomePage> {
                                       separatorBuilder: (_, __) =>
                                           const SizedBox(width: 12),
                                       itemBuilder: (context, index) {
-                                        return GestureDetector(
+                                        return InkWell(
                                           onTap: () {
-                                            // TODO: action
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ComponiesBooksView(
+                                                    apiKey: companiesData[index]
+                                                        .apiToken!,
+                                                  ),
+                                                ));
                                           },
-                                          child: InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ComponiesBooksView(
-                                                      apiKey:
-                                                          companiesData[index]
-                                                              .apiToken!,
+                                          child: Container(
+                                            width: 130,
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .surface,
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.06),
+                                                  blurRadius: 10,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    Container(
+                                                      width: 36,
+                                                      height: 36,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .primary
+                                                            .withOpacity(0.15),
+                                                      ),
+                                                      child: Assets.newicons
+                                                          .bookOpenCover
+                                                          .image(),
                                                     ),
-                                                  ));
-                                            },
-                                            child: Container(
-                                              width: 130,
-                                              padding: const EdgeInsets.all(12),
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .surface,
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black
-                                                        .withOpacity(0.06),
-                                                    blurRadius: 10,
-                                                    offset: const Offset(0, 4),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      'تعداد کتاب ها : ${companiesData[index].booksCount}',
+                                                      style: const TextStyle(
+                                                          fontSize: 11),
+                                                    ),
+                                                    const Divider(),
+                                                    Expanded(
+                                                      child: Text(
+                                                        companiesData[index]
+                                                            .title!,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium
+                                                            ?.copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+
+                                                // 🔹 آیکن سه نقطه‌ای
+                                                Positioned(
+                                                  top: -6,
+                                                  right:
+                                                      -6, // اگه RTL هست و خواستی سمت چپ → left
+                                                  child: InkWell(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    onTap: () {
+                                                      showCompanyDescriptionDialog(
+                                                        context,
+                                                        companiesData[index]
+                                                                .description ??
+                                                            'توضیحی وجود ندارد',
+                                                        companiesData[index]
+                                                                .title ??
+                                                            '',
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      decoration: BoxDecoration(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .surface
+                                                            .withOpacity(0.9),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Icon(
+                                                        Icons.more_vert,
+                                                        size: 20,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurface,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ],
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  // Icon
-                                                  Container(
-                                                    width: 36,
-                                                    height: 36,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary
-                                                          .withOpacity(0.15),
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.menu_book_rounded,
-                                                      size: 18,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Divider(),
-                                                  // Title
-                                                  Expanded(
-                                                    child: Text(
-                                                      companiesData[index]
-                                                          .title!,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         );
@@ -744,11 +781,7 @@ class _HomePageState extends State<HomePage> {
                           builder: (context, state) {
                             if (state.categoryStatus
                                 is DownloadedCategotyLoading) {
-                              return SizedBox(
-                                height: 160,
-                                child: Center(
-                                    child: CustomLoading.fadingCircle(context)),
-                              );
+                              return const CategoriesShimmer();
                             }
 
                             if (state.categoryStatus
@@ -996,9 +1029,13 @@ class _HomePageState extends State<HomePage> {
                               }
 
                               if (state.booksStatus is DownloadedBooksLoading) {
-                                return Center(
-                                    child: CustomLoading.fadingCircle(context));
+                                return BooksGridShimmer(
+                                  crossAxisCount:
+                                      3, // می‌تونی با LayoutBuilder تنظیم کنی مثل Grid اصلی
+                                  childAspectRatio: 0.62,
+                                );
                               }
+
                               if (state.booksStatus is DownloadedBooksLoaded) {
                                 WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
@@ -1261,12 +1298,9 @@ class _HomePageState extends State<HomePage> {
               BlocBuilder<SliderCubit, SliderState>(
                 builder: (context, state) {
                   if (state.statusPages is PagesLoading) {
-                    return Container(
-                        color: Colors.white,
-                        width: EsaySize.width(context),
-                        height: 40,
-                        child: CustomLoading.loadLine(context));
+                    return const FancyStickyHeaderShimmer();
                   }
+
                   if (state.statusPages is PagesLoaded) {
                     final pages = (state.statusPages as PagesLoaded).pages;
                     return FancyStickyHeader(

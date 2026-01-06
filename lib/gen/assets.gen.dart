@@ -2857,6 +2857,10 @@ class $AssetsNewiconsGen {
   AssetGenImage get calendarLinesPen =>
       const AssetGenImage('assets/newicons/calendar-lines-pen.png');
 
+  /// File path: assets/newicons/category-alt.png
+  AssetGenImage get categoryAlt =>
+      const AssetGenImage('assets/newicons/category-alt.png');
+
   /// File path: assets/newicons/circle-bookmark.png
   AssetGenImage get circleBookmark =>
       const AssetGenImage('assets/newicons/circle-bookmark.png');
@@ -3011,6 +3015,7 @@ class $AssetsNewiconsGen {
         bookoff,
         calendarClock,
         calendarLinesPen,
+        categoryAlt,
         circleBookmark,
         circleT,
         commentAltCheck,
