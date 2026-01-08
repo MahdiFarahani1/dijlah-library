@@ -10,66 +10,91 @@ class ApiErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // انیمیشن خطا
-            Lottie.asset(
-              Assets.lottie.noConnection,
-              width: 160,
-              height: 160,
-              fit: BoxFit.contain,
-              repeat: true,
+    final theme = Theme.of(context);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
             ),
+            child: IntrinsicHeight(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // انیمیشن Lottie
+                      Lottie.asset(
+                        Assets.lottie.noConnection,
+                        width: 160,
+                        height: 160,
+                        fit: BoxFit.contain,
+                      ),
 
-            const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-            // عنوان خطا
-            const Text(
-              'حدث خطأ!',
-              style: TextStyle(
-                  fontSize: 22, fontWeight: FontWeight.bold, color: Colors.red),
-            ).animate().fadeIn(delay: 300.ms),
+                      // عنوان خطا
+                      Text(
+                        'حدث خطأ!',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      ).animate().fadeIn(delay: 200.ms),
 
-            const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-            // توضیح خطا
-            const Text(
-              'فشل الاتصال بالخادم. حاول مرة أخرى من فضلك.',
-              style: TextStyle(color: Colors.grey),
-              textAlign: TextAlign.center,
-            ).animate().fadeIn(delay: 500.ms),
+                      // توضیح خطا
+                      Text(
+                        'فشل الاتصال بالخادم. حاول مرة أخرى من فضلك.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey[600]),
+                      ).animate().fadeIn(delay: 400.ms),
 
-            const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-            // دکمه تلاش مجدد
-            Directionality(
-              textDirection: TextDirection.ltr,
-              child: ElevatedButton.icon(
-                onPressed: onRetry,
-                icon: Assets.newicons.messageCircleRefresh
-                    .image(width: 20, height: 20, color: Colors.white),
-                label: const Text('حاول مرة أخرى'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                      // دکمه Retry
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: ElevatedButton.icon(
+                          key: UniqueKey(), // جلوگیری از Key تکراری
+                          onPressed: onRetry,
+                          icon: Assets.newicons.messageCircleRefresh.image(
+                            width: 20,
+                            height: 20,
+                            color: theme.colorScheme.surface,
+                          ),
+                          label: Text(
+                            'حاول مرة أخرى',
+                            style: TextStyle(
+                              color: theme.colorScheme.surface,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.primary,
+                            foregroundColor: theme.colorScheme.surface,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                        ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.2),
+                      ),
+                    ],
                   ),
                 ),
-              ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.3),
+              ),
             ),
-          ],
-        ),
-      )
-          .animate()
-          .fadeIn(duration: 500.ms)
-          .scale(begin: const Offset(0.95, 0.95)),
+          ),
+        );
+      },
     );
   }
 }

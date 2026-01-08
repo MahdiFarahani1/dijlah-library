@@ -10,6 +10,7 @@ import 'package:bookapp/features/books/bloc/download/download_state.dart';
 import 'package:bookapp/features/books/bloc/header_anim/cubit/header_animation_cubit.dart';
 import 'package:bookapp/features/books/repositoreis/book_repository.dart';
 import 'package:bookapp/features/books/widgets/book_item.dart';
+import 'package:bookapp/core/utils/shimmer_home.dart';
 import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/gen/fonts.gen.dart';
 import 'package:bookapp/core/utils/check_connection.dart'; // [New]
@@ -90,7 +91,11 @@ class BooksScreen extends StatelessWidget {
           child: BlocBuilder<BookCubit, BookState>(
             builder: (context, state) {
               if (state is BookLoading) {
-                return Center(child: CustomLoading.fadingCircle(context));
+                return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: 8,
+                  itemBuilder: (_, __) => const BookShimmerItem(),
+                );
               } else if (state is BookError) {
                 return Center(
                   child: ApiErrorWidget(

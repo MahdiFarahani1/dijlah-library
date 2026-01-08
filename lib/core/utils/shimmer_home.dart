@@ -226,7 +226,7 @@ class BooksGridShimmer extends StatelessWidget {
 
   const BooksGridShimmer({
     super.key,
-    this.itemCount = 6,
+    required this.itemCount,
     this.crossAxisCount = 3,
     this.childAspectRatio = 0.62,
   });
@@ -253,64 +253,52 @@ class BooksGridShimmer extends StatelessWidget {
         return Shimmer.fromColors(
           baseColor: baseColor,
           highlightColor: highlightColor,
-          child: Container(
-            decoration: BoxDecoration(
-              color: surfaceColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                  offset: Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Stack(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Column(
               children: [
-                Positioned.fill(
+                /// 📘 کاور کتاب
+                Expanded(
                   child: Container(
-                    color: baseColor,
+                    width: double.infinity,
+                    color: surfaceColor,
                   ),
                 ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  height: 50,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.3),
-                        ],
-                      ),
-                      borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(16),
-                      ),
+
+                /// 📝 ناحیه نوشته‌های پایین (دقیقاً مثل UI واقعی)
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.15),
+                        Colors.black.withOpacity(0.35),
+                      ],
                     ),
                   ),
-                ),
-                Positioned(
-                  left: 8,
-                  right: 8,
-                  bottom: 8,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         height: 12,
                         width: double.infinity,
-                        color: textSurfaceColor,
+                        decoration: BoxDecoration(
+                          color: textSurfaceColor,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       Container(
                         height: 10,
-                        width: 80,
-                        color: textSurfaceColor,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: textSurfaceColor,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ],
                   ),
@@ -442,6 +430,85 @@ class ReadingBooksShimmer extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class BookShimmerItem extends StatelessWidget {
+  const BookShimmerItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Shimmer.fromColors(
+        baseColor: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+        highlightColor: isDark ? Colors.grey.shade700 : Colors.grey.shade100,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 📘 Cover
+            Container(
+              width: 70,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(width: 14),
+
+            // 📄 Texts
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 16,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 16,
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    height: 12,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            // ⬇️ Download icon placeholder
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

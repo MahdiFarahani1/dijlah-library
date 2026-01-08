@@ -15,7 +15,7 @@ import 'package:bookapp/features/mainWrapper/widget/dialog_componies.dart';
 // import removed: bookitem.dart (unused)
 import 'package:bookapp/features/mainWrapper/widget/empty_reading.dart';
 import 'package:bookapp/features/mainWrapper/widget/random_book.dart';
-import 'package:bookapp/features/mainWrapper/widget/shimmer_home.dart';
+import 'package:bookapp/core/utils/shimmer_home.dart';
 import 'package:bookapp/features/reading_progress/bloc/cubit/readingbook_cubit.dart';
 import 'package:bookapp/features/search/view/search_screen.dart';
 import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
@@ -692,7 +692,7 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                     const SizedBox(height: 4),
                                                     Text(
-                                                      'تعداد کتاب ها : ${companiesData[index].booksCount}',
+                                                      'عددُ الكُتُب : ${companiesData[index].booksCount}',
                                                       style: const TextStyle(
                                                           fontSize: 11),
                                                     ),
@@ -732,7 +732,7 @@ class _HomePageState extends State<HomePage> {
                                                         context,
                                                         companiesData[index]
                                                                 .description ??
-                                                            'توضیحی وجود ندارد',
+                                                            '',
                                                         companiesData[index]
                                                                 .title ??
                                                             '',
@@ -1030,6 +1030,7 @@ class _HomePageState extends State<HomePage> {
 
                               if (state.booksStatus is DownloadedBooksLoading) {
                                 return BooksGridShimmer(
+                                  itemCount: 6,
                                   crossAxisCount:
                                       3, // می‌تونی با LayoutBuilder تنظیم کنی مثل Grid اصلی
                                   childAspectRatio: 0.62,

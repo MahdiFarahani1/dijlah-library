@@ -140,7 +140,7 @@ class BookListDbHelper {
         numberPages: e['page_number'],
         category: CategoryModel(
             id: e['gid'] as int? ?? 0,
-            title: e['title'] ?? '',
+            title: e['category_name'] as String? ?? 'بدون دسته‌بندی',
             slug: '',
             booksCount: 0),
       );

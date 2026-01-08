@@ -205,11 +205,15 @@ class DownloadedBooksCubit extends Cubit<DownloadedBooksState> {
             // print('⚠️ [Image] Not found for book $id');
             continue;
           }
-
+          final bookCategory =
+              (bookInfo.category != null && bookInfo.category!.title.isNotEmpty)
+                  ? bookInfo.category!.title
+                  : 'بدون دسته‌بندی'; // fallback امن
           // مرحله ۷: افزودن به لیست نهایی
           final imageBytes = imageFile.content as List<int>;
+          print('new book category!!!!!!! $bookCategory');
           localBooks.add(BookItem(
-            category: bookInfo.category.title,
+            category: bookCategory,
             pageNumbers: bookInfo.numberPages,
             id: id,
             imageData: imageBytes,

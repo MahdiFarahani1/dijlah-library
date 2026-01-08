@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RandomBookCard extends StatefulWidget {
   final BookItem book;
-  const RandomBookCard({required this.book, Key? key}) : super(key: key);
+  const RandomBookCard({required this.book, super.key});
 
   @override
   State<RandomBookCard> createState() => _RandomBookCardState();
