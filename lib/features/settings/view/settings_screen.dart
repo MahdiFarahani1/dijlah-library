@@ -131,7 +131,8 @@ class SettingsPage extends StatelessWidget {
                     activeTrackColor: Theme.of(context).primaryColor,
                     thumbColor: Theme.of(context).primaryColor,
                     valueIndicatorColor: Theme.of(context).primaryColor,
-                    valueIndicatorTextStyle: TextStyle(color: Colors.white)),
+                    valueIndicatorTextStyle: TextStyle(
+                        color: Theme.of(context).scaffoldBackgroundColor)),
                 child: Slider(
                   value: fontSize,
                   min: 16,
@@ -176,7 +177,8 @@ class SettingsPage extends StatelessWidget {
                     activeTrackColor: Theme.of(context).primaryColor,
                     thumbColor: Theme.of(context).primaryColor,
                     valueIndicatorColor: Theme.of(context).primaryColor,
-                    valueIndicatorTextStyle: TextStyle(color: Colors.white)),
+                    valueIndicatorTextStyle: TextStyle(
+                        color: Theme.of(context).scaffoldBackgroundColor)),
                 child: Slider(
                   value: lineHeight,
                   min: 1.0,

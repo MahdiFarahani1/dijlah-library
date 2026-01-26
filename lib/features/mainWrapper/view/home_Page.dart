@@ -8,7 +8,6 @@ import 'package:bookapp/features/books/bloc/downloaded_page/downloaded_page_stat
 import 'package:bookapp/features/books/model/book_item_model.dart';
 import 'package:bookapp/features/content_books/view/content_page.dart';
 import 'package:bookapp/features/mainWrapper/bloc/slider/slider_cubit.dart';
-import 'package:bookapp/features/mainWrapper/model/slider_model.dart';
 import 'package:bookapp/features/mainWrapper/view/all_readingbook.dart';
 import 'package:bookapp/features/mainWrapper/view/componies_books_view.dart';
 import 'package:bookapp/features/mainWrapper/widget/dialog_componies.dart';
@@ -26,7 +25,6 @@ import 'package:bookapp/features/settings/bloc/settings_state.dart';
 import 'package:bookapp/shared/func/launchURL.dart';
 // imports removed: storage_comment_screen.dart, storage_page_screen.dart (unused)
 import 'package:bookapp/gen/assets.gen.dart';
-import 'package:bookapp/shared/ui_helper/dialog_common.dart';
 import 'package:bookapp/shared/ui_helper/snackbar_common.dart';
 import 'package:bookapp/shared/utils/esay_size.dart';
 // import removed: launchURL.dart (unused)
@@ -35,7 +33,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 // import removed: share_plus (unused)
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -80,7 +77,7 @@ class _HomePageState extends State<HomePage> {
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent - 200,
+        _scrollController.position.maxScrollExtent - 50,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeOut,
       );
@@ -113,6 +110,7 @@ class _HomePageState extends State<HomePage> {
             await context.read<SliderCubit>().loadHomeData();
 
             await context.read<DownloadedBooksCubit>().loadCategoryBooks();
+
             await context
                 .read<DownloadedBooksCubit>()
                 .loadDownloadedBooks(context, categoryId: null);
@@ -152,6 +150,7 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                             child: Container(
+                              width: EsaySize.width(context) * 0.95,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 15),
                               decoration: BoxDecoration(
@@ -224,6 +223,7 @@ class _HomePageState extends State<HomePage> {
                                     return Column(
                                       children: [
                                         SizedBox(
+                                          width: EsaySize.width(context) * 0.95,
                                           height: sliderHeight,
                                           child: CarouselSlider(
                                             options: CarouselOptions(
@@ -339,22 +339,25 @@ class _HomePageState extends State<HomePage> {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SectionHeader(
-                                          title: 'اكمال المطالعة',
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ReadingBooksScreen(
-                                                        readingBooks:
-                                                            state.books,
-                                                      )),
-                                            );
-                                          })
-                                      .animate(delay: 800.ms)
-                                      .fadeIn(duration: 700.ms)
-                                      .slideX(begin: -0.3),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 14),
+                                    child: SectionHeader(
+                                            title: 'اكمال المطالعة',
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReadingBooksScreen(
+                                                          readingBooks:
+                                                              state.books,
+                                                        )),
+                                              );
+                                            })
+                                        .animate(delay: 800.ms)
+                                        .fadeIn(duration: 700.ms)
+                                        .slideX(begin: -0.3),
+                                  ),
                                   const SizedBox(height: 15.0),
                                   SizedBox(
                                     height: 280,
@@ -612,7 +615,7 @@ class _HomePageState extends State<HomePage> {
 
                             return Column(
                               children: [
-                                HeaderTile(context, 'الكتب المقروءة'),
+                                headerTile(context, 'الكتب المقروءة', 16),
                                 RandomBookCard(book: book),
                               ],
                             );
@@ -631,9 +634,9 @@ class _HomePageState extends State<HomePage> {
 
                               return Column(
                                 children: [
-                                  HeaderTile(context, 'مواضيع مقترحة'),
+                                  headerTile(context, 'مواضيع مقترحة', 16),
                                   SizedBox(
-                                    height: 130,
+                                    height: EsaySize.height(context) / 5.3,
                                     child: ListView.separated(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16),
@@ -655,7 +658,7 @@ class _HomePageState extends State<HomePage> {
                                                 ));
                                           },
                                           child: Container(
-                                            width: 130,
+                                            width: EsaySize.width(context) / 3,
                                             padding: const EdgeInsets.all(12),
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
@@ -677,8 +680,12 @@ class _HomePageState extends State<HomePage> {
                                                 Column(
                                                   children: [
                                                     Container(
-                                                      width: 36,
-                                                      height: 36,
+                                                      width: EsaySize.height(
+                                                              context) /
+                                                          12,
+                                                      height: EsaySize.height(
+                                                              context) /
+                                                          12,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
                                                         color: Theme.of(context)
@@ -686,9 +693,10 @@ class _HomePageState extends State<HomePage> {
                                                             .primary
                                                             .withOpacity(0.15),
                                                       ),
-                                                      child: Assets.newicons
-                                                          .bookOpenCover
-                                                          .image(),
+                                                      child: Image.network(
+                                                        companiesData[index]
+                                                            .photoUrl!,
+                                                      ),
                                                     ),
                                                     const SizedBox(height: 4),
                                                     Text(
@@ -812,7 +820,7 @@ class _HomePageState extends State<HomePage> {
 
                               return Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 0),
+                                      vertical: 8, horizontal: 10),
                                   child: SizedBox(
                                     height: 40,
                                     child: ListView.separated(
@@ -1320,38 +1328,38 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
 
-  Widget HeaderTile(BuildContext context, String title) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 🔹 Section Header
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 3.5,
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
+Widget headerTile(BuildContext context, String title, double padH) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 🔹 Section Header
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: padH, vertical: 0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 3.5,
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ],
           ),
+        ),
 
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
+        const SizedBox(height: 20),
+      ],
+    ),
+  );
 }
 
 class FeatureModel {
@@ -1442,13 +1450,7 @@ class SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.3),
+        headerTile(context, title, 8),
         TextButton(
           onPressed: () {
             onPressed();

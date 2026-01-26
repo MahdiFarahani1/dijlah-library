@@ -32,6 +32,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   if (defaultTargetPlatform == TargetPlatform.android) {
     if (await hasInternetConnection()) {
       await Firebase.initializeApp();
@@ -47,15 +48,15 @@ void main() async {
   print('📁 App Documents Directory: ${dir.path}/books');
   print('-----------------------------');
 
-  final entities = dir.listSync(recursive: true);
+  // final entities = dir.listSync(recursive: true);
 
-  for (final entity in entities) {
-    if (entity is File) {
-      print('📄 FILE: ${entity.path}');
-    } else if (entity is Directory) {
-      print('📂 DIR : ${entity.path}');
-    }
-  }
+  // for (final entity in entities) {
+  //   if (entity is File) {
+  //     print('📄 FILE: ${entity.path}');
+  //   } else if (entity is Directory) {
+  //     print('📂 DIR : ${entity.path}');
+  //   }
+  // }
 
   print('-----------------------------');
   await GetStorage.init();

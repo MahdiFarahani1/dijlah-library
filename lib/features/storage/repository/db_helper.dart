@@ -122,11 +122,17 @@ class DatabaseStorageHelper {
     );
   }
 
-  static Future<int> insertBook(String bookName, int bookID) async {
+  static Future<int> insertBook(
+    String bookName,
+    int bookID,
+  ) async {
     final db = await database;
     return await db.insert(
       'book',
-      {'book_name': bookName, 'book_id': bookID},
+      {
+        'book_name': bookName,
+        'book_id': bookID,
+      },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }

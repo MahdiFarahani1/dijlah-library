@@ -80,10 +80,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     child: Column(
                       children: [
                         SizedBox(height: EsaySize.height(context) * 0.15),
-                        Image.asset(page.image, height: 260)
-                            .animate()
-                            .fade(duration: 800.ms)
-                            .slideY(begin: 0.3),
+                        Image.asset(
+                          page.image,
+                          height: 300,
+                          width: 300,
+                        ).animate().fade(duration: 800.ms).slideY(begin: 0.3),
                         const SizedBox(height: 32),
                         Text(page.title,
                                 textAlign: TextAlign.center,

@@ -44,7 +44,10 @@ class BookmarkCubit extends Cubit<BookMarkState> {
       if (current) {
         await removeBookmark(bookId);
       } else {
-        await addBookmark(bookName, bookId);
+        await addBookmark(
+          bookName,
+          bookId,
+        );
       }
     } catch (e) {
       emit(state.copyWith(status: BookMarkStatus.error));
@@ -53,7 +56,10 @@ class BookmarkCubit extends Cubit<BookMarkState> {
     await loadBookmarks();
   }
 
-  Future<void> addBookmark(String bookName, String bookId) async {
+  Future<void> addBookmark(
+    String bookName,
+    String bookId,
+  ) async {
     try {
       emit(state.copyWith(status: BookMarkStatus.loading));
 

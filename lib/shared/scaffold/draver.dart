@@ -45,14 +45,14 @@ class CustomDrawer extends StatelessWidget {
                     Navigator.pop(context);
                     MainWrapper.controllerNavBar.jumpToTab(0);
                   }),
-                  _buildDrawerItem(
-                      Assets.newicons.userLock.path, 'السيرة الذاتية',
-                      () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const BioGraphy()));
-                  }),
+                  // _buildDrawerItem(
+                  //     Assets.newicons.userLock.path, 'السيرة الذاتية',
+                  //     () async {
+                  //   Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => const BioGraphy()));
+                  // }),
                   _buildDrawerItem(
                       Assets.newicons.commentInfo.path, 'حول التطبيق', () {
                     Navigator.push(
@@ -73,7 +73,7 @@ class CustomDrawer extends StatelessWidget {
                       Assets.newicons.userLock.path, 'سياسية الخصوصية',
                       () async {
                     final Uri url = Uri.parse(
-                        'https://al-hakim.com/privacy_alhakim_lib.html');
+                        'https://dijlah.org/privacy_policy/privacy_dijlah_library.html');
 
                     launchUrl(url);
                   }),

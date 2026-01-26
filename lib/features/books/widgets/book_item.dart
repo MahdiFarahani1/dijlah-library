@@ -90,12 +90,15 @@ class BookItemTile extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: ImageNetworkCommon(
-                    imageurl: imageUrl,
-                    width: 75,
-                    height: 105,
+                Padding(
+                  padding: const EdgeInsets.only(top: 7),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: ImageNetworkCommon(
+                      imageurl: imageUrl,
+                      width: 75,
+                      height: 105,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -291,7 +294,7 @@ class _BookDownloadListState extends State<BookDownloadList> {
       padding: const EdgeInsets.all(16),
       itemCount: widget.books.length,
       itemBuilder: (context, index) {
-        final book = widget.books.reversed.toList()[index];
+        final book = widget.books[index];
         return BookItemTile(
           key: ValueKey(book.id),
           book: book,

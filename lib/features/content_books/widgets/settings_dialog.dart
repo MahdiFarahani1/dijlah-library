@@ -53,7 +53,7 @@ class TextSettingsDialog {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Text(
-                                  "🛠 إعدادات النص",
+                                  "إعدادات النص",
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -81,8 +81,9 @@ class TextSettingsDialog {
                                     inactiveTrackColor: Colors.grey.shade300,
                                     thumbColor:
                                         Theme.of(context).colorScheme.primary,
-                                    valueIndicatorTextStyle:
-                                        TextStyle(color: Colors.white),
+                                    valueIndicatorTextStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor),
                                   ),
                                   child: Slider(
                                     value: state.fontSize,
@@ -129,8 +130,9 @@ class TextSettingsDialog {
                                 ),
                                 SliderTheme(
                                   data: SliderTheme.of(context).copyWith(
-                                    valueIndicatorTextStyle:
-                                        TextStyle(color: Colors.white),
+                                    valueIndicatorTextStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor),
                                     trackHeight: 2,
                                     thumbShape: RoundSliderThumbShape(
                                         enabledThumbRadius: 8),
@@ -178,8 +180,9 @@ class TextSettingsDialog {
 
                                 // Font Family
                                 const Align(
-                                    alignment: Alignment.centerLeft,
+                                    alignment: Alignment.centerRight,
                                     child: Text('نوع الخط')),
+
                                 const SizedBox(height: 8),
                                 DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
@@ -234,12 +237,14 @@ class TextSettingsDialog {
                                     },
                                   ),
                                 ),
-
+                                Divider(
+                                  color: Colors.grey,
+                                ),
                                 const SizedBox(height: 10),
 
                                 // Background Color
                                 const Align(
-                                    alignment: Alignment.centerLeft,
+                                    alignment: Alignment.centerRight,
                                     child: Text("لون الخلفیة")),
                                 const SizedBox(height: 8),
                                 Row(

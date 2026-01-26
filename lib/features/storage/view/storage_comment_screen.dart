@@ -325,7 +325,7 @@ class _CommentScreenState extends State<CommentScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('لغو', style: TextStyle(fontSize: 16)),
+              child: const Text('إلغاء', style: TextStyle(fontSize: 16)),
             ),
             ElevatedButton(
               onPressed: () async {

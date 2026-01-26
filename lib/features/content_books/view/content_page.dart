@@ -669,6 +669,8 @@ class _ContentPageState extends State<ContentPage> {
                                         ),
                                       ),
                                       trackBar: FlutterSliderTrackBar(
+                                          inactiveTrackBar:
+                                              BoxDecoration(color: Colors.grey),
                                           activeTrackBar: BoxDecoration(
                                               color: Theme.of(context)
                                                   .colorScheme

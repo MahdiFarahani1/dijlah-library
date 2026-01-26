@@ -80,13 +80,16 @@ class _FancyStickyHeaderState extends State<FancyStickyHeader>
                         duration: const Duration(milliseconds: 300),
                         child: _collapsed
                             ? SizedBox.shrink()
-                            : Image.asset(widget.icons[index],
-                                width: 30,
-                                height: 30,
-                                color: Theme.of(context).primaryColor),
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Image.asset(widget.icons[index],
+                                    width: 30,
+                                    height: 30,
+                                    color: Theme.of(context).primaryColor),
+                              ),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    !_collapsed ? const SizedBox(height: 4) : SizedBox.shrink(),
                     // 🔹 Text با انیمیشن و سه نقطه
                     AnimatedDefaultTextStyle(
                       style: TextStyle(
