@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bookapp/config/splash/check_frist_time.dart';
-import 'package:bookapp/features/mainWrapper/view/navigaion.dart';
 import 'package:bookapp/features/settings/bloc/settings_cubit.dart';
 import 'package:bookapp/gen/assets.gen.dart';
 import 'package:bookapp/shared/utils/esay_size.dart';
