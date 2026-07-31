@@ -1,0 +1,181 @@
+{
+  "project_info": {
+    "project_number": "1048912133961",
+    "project_id": "dijlahapps-b8d60",
+    "storage_bucket": "dijlahapps-b8d60.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:c44e612ec9f75d8b5ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.alhabwah"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:ba875c84e7ce471c5ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.library"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:fc47fb2893afc4545ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.alkhalissi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:d4bce416334cbe765ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.alsadeq"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:9c39dd28580859be5ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.bnnews"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:6d73fb081c026e485ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.husseiniencyclopedia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:90bf42119c9e27425ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.library"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:5cdfcc94677fef215ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.malzahra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048912133961:android:cd61df8bf2a5391d5ae498",
+        "android_client_info": {
+          "package_name": "com.dijlah.moterfy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB77SadYGeS40kqFhIroMLUexai7wPhyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
